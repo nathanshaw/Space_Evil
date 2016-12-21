@@ -16,7 +16,6 @@ public class DestroyByCollision : MonoBehaviour {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent<GameController>();
-			Debug.Log ("Found gameControllerObject");
 		}
 		if (gameController == null) {
 			Debug.Log ("Cannot find 'GameController' script");

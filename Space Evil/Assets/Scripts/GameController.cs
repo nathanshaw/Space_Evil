@@ -24,13 +24,19 @@ public class GameController : MonoBehaviour
 	public GUIText restartText;
 	public GUIText gameOverText;
 
+	// Player object
+	public GameObject player;
+	public GameObject playerExplosion;
+	// player states
+	public float playerHitPoints;
+
+	// text
 	private bool gameOver;
 	private bool restart;
 
 	private int score;
 
 	void Start () {
-		//scoreText = GetComponent <GUIText> ();
 		restart = false;
 		gameOver = false;
 		restartText.text = "";
@@ -104,6 +110,16 @@ public class GameController : MonoBehaviour
 	public void AddScore (int newScoreValue) {
 		score += newScoreValue;
 		UpdateScore ();
+	}
+
+	void playerHit(float damage) {
+		playerHitPoints -= damage;
+		if (playerHitPoints < 0) {
+			GameOver ();
+			Destroy (player);
+			Instantiate (playerExplosion, player.transform.position, player.transform.rotation);
+			// destroy the player
+		}
 	}
 
 	void UpdateScore () {

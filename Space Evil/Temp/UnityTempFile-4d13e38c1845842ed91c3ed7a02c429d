@@ -80,9 +80,10 @@
 -define:UNITY_TEAM_LICENSE
 'Assets/Scripts/DestroyAfterTime.cs'
 'Assets/Scripts/DestroyByBoundary.cs'
-'Assets/Scripts/DestroyByCollision.cs'
 'Assets/Scripts/DestroyByCollisionEnemyAestroid.cs'
+'Assets/Scripts/DestroyByCollisionEnemyBolt.cs'
 'Assets/Scripts/DestroyByCollisionEnemyDrone.cs'
+'Assets/Scripts/DestroyByCollisionPlayerShip.cs'
 'Assets/Scripts/EnemyFire.cs'
 'Assets/Scripts/EnemyProperties.cs'
 'Assets/Scripts/GameController.cs'

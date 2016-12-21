@@ -15,7 +15,6 @@ public class EnemyFire : MonoBehaviour {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent<GameController>();
-			Debug.Log ("Found gameControllerObject");
 		}
 		if (gameController == null) {
 			Debug.Log ("Cannot find 'GameController' script");
@@ -25,11 +24,11 @@ public class EnemyFire : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.tag == "Boundary") {
+		if (other.CompareTag ("Boundary")) {
 			return;
 		}
 
-		if (other.tag == "Player") {
+		if (other.CompareTag("Player")) {
 			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
 			gameController.GameOver ();
 		}

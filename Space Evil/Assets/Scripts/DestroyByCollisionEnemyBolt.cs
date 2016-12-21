@@ -6,7 +6,7 @@ public class DestroyByCollisionEnemyBolt : MonoBehaviour {
 
 	public GameObject explosion;
 	public GameObject playerExplosion;
-	public float hitPoints;
+	public float damage;
 
 	public int scoreValue;
 	private GameController gameController;
@@ -25,12 +25,9 @@ public class DestroyByCollisionEnemyBolt : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		Debug.Log ("destroy by collision enemy bolt other tag is : ");
-		Debug.Log (other.tag);
 		if (other.CompareTag ("Boundary") || 
 			other.CompareTag ("Active Enemy") || 
 			other.CompareTag ("Passive Enemy")) {
-			Debug.Log ("Returning no destruction");
 			return;
 		}
 

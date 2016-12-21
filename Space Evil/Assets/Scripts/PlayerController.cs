@@ -17,12 +17,15 @@ public class PlayerController : MonoBehaviour
 	public GameObject bolt;
 	public Transform boltSpawn;
 	public float boltFireRate;
+	public float maxHitPoints;
+	public float currentHitPoints;
+	public float boltDamage;
+
 	private float nextFire;
 	private AudioSource audioSource;
 
 	void Start() {
 		audioSource = GetComponent<AudioSource> ();
-
 	}
 
 	//code that is run for every frame
