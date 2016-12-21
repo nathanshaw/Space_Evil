@@ -21,12 +21,20 @@ public class GameController : MonoBehaviour
 
 	// for keeping track of the score
 	public GUIText scoreText;
+	private int score;
+
 	public GUIText restartText;
 	public GUIText gameOverText;
+	public GUIText hitPointsText;
+
+	// keeping track of notifications
+	public GUIText notificationText;
+	public float notificationWaitTime;
 
 	// Player object
 	public GameObject player;
 	public GameObject playerExplosion;
+
 	// player states
 	public float playerHitPoints;
 
@@ -34,13 +42,13 @@ public class GameController : MonoBehaviour
 	private bool gameOver;
 	private bool restart;
 
-	private int score;
-
 	void Start () {
 		restart = false;
 		gameOver = false;
 		restartText.text = "";
 		gameOverText.text = "";
+		hitPointsText.text = "" + playerHitPoints;
+		notificationText.text = "";
 		score = 0;
 		UpdateScore ();
 		StartCoroutine (SpawnWaves ());
@@ -99,27 +107,31 @@ public class GameController : MonoBehaviour
 					restartText.text = "Press 'R' to restart";
 					break;
 				}
-				
 			}
 		if (gameOver == false && restart == false) {
 			LevelCompleated ();
 		}
-
-		}
+	}
 
 	public void AddScore (int newScoreValue) {
 		score += newScoreValue;
 		UpdateScore ();
 	}
 
-	void playerHit(float damage) {
+	public int PlayerHit(float damage) {
 		playerHitPoints -= damage;
-		if (playerHitPoints < 0) {
+		Debug.Log ("Player Took Damage, Current Hit Points : " + playerHitPoints);
+		if (playerHitPoints <= 0) {
 			GameOver ();
 			Destroy (player);
-			Instantiate (playerExplosion, player.transform.position, player.transform.rotation);
-			// destroy the player
+			Instantiate (playerExplosion, 
+						 player.transform.position, 
+						 player.transform.rotation);
+			hitPointsText.text = "0";
+			return 1;
 		}
+		hitPointsText.text = "" + damage;
+		return 0;
 	}
 
 	void UpdateScore () {
@@ -129,6 +141,18 @@ public class GameController : MonoBehaviour
 	public void GameOver () {
 		gameOverText.text = "GAME OVER";
 		gameOver = true;
+	}
+
+	IEnumerator Notification (string text) {
+		notificationText.text = text;
+		yield return new WaitForSeconds (notificationWaitTime);
+		notificationText.text = "";
+		// wait 4 seconds then remove text
+	}
+
+	public void AddNotification (string text) {
+		Debug.Log ("Starting coroutine Notificaiton with argument : " + text);
+		StartCoroutine (Notification (text));
 	}
 
 	void LevelCompleated () {

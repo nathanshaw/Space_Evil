@@ -6,7 +6,7 @@ public class DestroyByCollisionEnemyAestroid : MonoBehaviour {
 
 	public GameObject explosion;
 	public GameObject playerExplosion;
-	public float hitPoints;
+	public float damage;
 
 	public int scoreValue;
 	private GameController gameController;
@@ -25,26 +25,11 @@ public class DestroyByCollisionEnemyAestroid : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.CompareTag("Boundary")) {
-			return;
+		if (other.CompareTag ("Player")) {
+			// if the hit does enough damage...
+			Instantiate (explosion, transform.position, transform.rotation);
+			gameController.PlayerHit (damage);
+			Destroy (gameObject);
 		}
-		if (other.CompareTag ("Passive Enemy")) {
-			return;
-		}
-		if (other.CompareTag("Active Enemy")) {
-			return;
-		}
-		if (other.CompareTag ("Enemy Weapon")) {
-			return;
-		}
-		// if the hit does enough damage...
-		Instantiate (explosion, transform.position, transform.rotation);
-		if (other.tag == "Player") {
-			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
-			gameController.GameOver ();
-		}
-		gameController.AddScore (scoreValue);
-		Destroy (other.gameObject);
-		Destroy (gameObject);
 	}
 }

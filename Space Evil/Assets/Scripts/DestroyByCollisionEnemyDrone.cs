@@ -6,7 +6,7 @@ public class DestroyByCollisionEnemyDrone : MonoBehaviour {
 
 	public GameObject explosion;
 	public GameObject playerExplosion;
-	public float hitPoints;
+	public float damage;
 
 	public int scoreValue;
 	private GameController gameController;
@@ -25,20 +25,11 @@ public class DestroyByCollisionEnemyDrone : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.CompareTag ("Boundary") || 
-			other.CompareTag ("Passive Enemy") || 
-			other.CompareTag ("Active Enemy") ||
-			other.CompareTag ("Enemy Weapon")) {
-			return;
-		}
-		// if the hit does enough damage...
-		Instantiate (explosion, transform.position, transform.rotation);
 		if (other.tag == "Player") {
-			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
-			gameController.GameOver ();
+			// if the hit does enough damage...
+			Instantiate (explosion, transform.position, transform.rotation);
+			Destroy (gameObject);
+			gameController.PlayerHit (damage);
 		}
-		gameController.AddScore (scoreValue);
-		Destroy (other.gameObject);
-		Destroy (gameObject);
 	}
 }

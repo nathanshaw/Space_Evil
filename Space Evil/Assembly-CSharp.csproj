@@ -52,12 +52,14 @@
      <Compile Include="Assets\Scripts\DestroyByCollisionEnemyBolt.cs" />
      <Compile Include="Assets\Scripts\DestroyByCollisionEnemyDrone.cs" />
      <Compile Include="Assets\Scripts\DestroyByCollisionPlayerShip.cs" />
+     <Compile Include="Assets\Scripts\DestroyByCollisionPlayerWeapon.cs" />
      <Compile Include="Assets\Scripts\EnemyFire.cs" />
      <Compile Include="Assets\Scripts\EnemyProperties.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Mover.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\RandomRotator.cs" />
+     <Compile Include="Assets\Scripts\SpeedPowerUp.cs" />
      <Compile Include="Assets\Scripts\WeaponController.cs" />
      <None Include="Assets\TutorialInfo\Fonts\LICENSE.txt" />
  <Reference Include="UnityEngine.Analytics">

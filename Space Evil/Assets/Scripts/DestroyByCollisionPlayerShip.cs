@@ -6,7 +6,7 @@ public class DestroyByCollisionPlayerShip : MonoBehaviour {
 
 	public GameObject explosion;
 	public GameObject playerExplosion;
-	public float hitPoints;
+	public float damage;
 
 	public int scoreValue;
 	private GameController gameController;
@@ -25,17 +25,9 @@ public class DestroyByCollisionPlayerShip : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.tag == "Boundary") {
-			return;
-		}
+		// Debug.Log ("WARNING DESTROYBOCOLLISION PLAYER SHIP DOES NOTHING RIGHT NOW");
 		// if the hit does enough damage...
-		Instantiate (explosion, transform.position, transform.rotation);
-		if (other.tag == "Player") {
-			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
-			gameController.GameOver ();
-		}
-		gameController.AddScore (scoreValue);
-		Destroy (other.gameObject);
-		Destroy (gameObject);
+		// Destroy (other.gameObject);
+		// Destroy (gameObject);
 	}
 }
