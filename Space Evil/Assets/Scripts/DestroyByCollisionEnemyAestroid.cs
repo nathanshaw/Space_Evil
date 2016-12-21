@@ -16,7 +16,6 @@ public class DestroyByCollisionEnemyAestroid : MonoBehaviour {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent<GameController>();
-			Debug.Log ("Found gameControllerObject");
 		}
 		if (gameController == null) {
 			Debug.Log ("Cannot find 'GameController' script");
@@ -26,7 +25,6 @@ public class DestroyByCollisionEnemyAestroid : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		Debug.Log (other.tag);
 		if (other.CompareTag("Boundary")) {
 			return;
 		}

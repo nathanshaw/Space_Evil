@@ -25,6 +25,7 @@ public class DestroyByCollisionEnemyBolt : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
+		Debug.Log ("collision enemy bolt : " + other.tag);
 		if (other.CompareTag ("Boundary") || 
 			other.CompareTag ("Active Enemy") || 
 			other.CompareTag ("Passive Enemy")) {

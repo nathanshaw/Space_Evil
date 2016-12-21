@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DestroyByCollision : MonoBehaviour {
+public class DestroyByCollisionPlayerShip : MonoBehaviour {
 
 	public GameObject explosion;
 	public GameObject playerExplosion;

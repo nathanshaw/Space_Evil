@@ -16,7 +16,6 @@ public class DestroyByCollisionEnemyDrone : MonoBehaviour {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent<GameController>();
-			Debug.Log ("Found gameControllerObject");
 		}
 		if (gameController == null) {
 			Debug.Log ("Cannot find 'GameController' script");
@@ -26,14 +25,10 @@ public class DestroyByCollisionEnemyDrone : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		Debug.Log (other.tag);
-		if (other.tag == "Boundary") {
-			return;
-		}
-		if (other.tag == "Passive Enemy") {
-			return;
-		}
-		if (other.tag == "Active Enemy") {
+		if (other.CompareTag ("Boundary") || 
+			other.CompareTag ("Passive Enemy") || 
+			other.CompareTag ("Active Enemy") ||
+			other.CompareTag ("Enemy Weapon")) {
 			return;
 		}
 		// if the hit does enough damage...
