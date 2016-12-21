@@ -25,9 +25,9 @@ public class DestroyByCollisionPlayerShip : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		// Debug.Log ("WARNING DESTROYBOCOLLISION PLAYER SHIP DOES NOTHING RIGHT NOW");
-		// if the hit does enough damage...
-		// Destroy (other.gameObject);
-		// Destroy (gameObject);
+		// Debug.Log ("Collision player ship : ", other.tag);
+		if (other.CompareTag ("Power Up")) {
+			Destroy (other.gameObject);
+		}
 	}
 }

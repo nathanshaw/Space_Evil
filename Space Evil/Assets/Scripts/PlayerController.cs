@@ -12,8 +12,8 @@ public class PlayerController : MonoBehaviour
 {
 	public Boundary boundary;
 	public float speed;
-	private float vTilt;
-	private float hTilt;
+	public float vTilt;
+	public float hTilt;
 	public GameObject bolt;
 	public Transform boltSpawn;
 	public float boltFireRate;

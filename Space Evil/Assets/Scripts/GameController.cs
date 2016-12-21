@@ -7,6 +7,8 @@ public class GameController : MonoBehaviour
 {
 	public GameObject[] aestroids;
 	public GameObject[] enemyDrones;
+	public GameObject[] commonPowerUps;
+
 	public Vector3 spawnValues;
 	public int hazardCount;
 	public int waveCount;
@@ -69,6 +71,14 @@ public class GameController : MonoBehaviour
 		for (int w = 0; w < waveCount; w++) {
 			// decrease the time inbetween aestroid spawns
 			spawnWait *= waveRespawnMult;
+
+			// spawn a speed powerup inbetween each wave
+			GameObject powerup = commonPowerUps [Random.Range (0, commonPowerUps.Length)];
+			Vector3 powerUpSpawnPosition = new Vector3 (
+				spawnValues.x, spawnValues.y, Random.Range (-spawnValues.z, spawnValues.z)
+			);
+			GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
+
 			// increase the number of hazards by the wave number we are on
 			hazardCount += w;
 			yield return new WaitForSeconds (waveWait);
@@ -121,7 +131,7 @@ public class GameController : MonoBehaviour
 	public int PlayerHit(float damage) {
 		playerHitPoints -= damage;
 		Debug.Log ("Player Took Damage, Current Hit Points : " + playerHitPoints);
-		if (playerHitPoints <= 0) {
+		if (playerHitPoints < 0 || playerHitPoints == 0) {
 			GameOver ();
 			Destroy (player);
 			Instantiate (playerExplosion, 
@@ -143,21 +153,26 @@ public class GameController : MonoBehaviour
 		gameOver = true;
 	}
 
-	IEnumerator Notification (string text) {
+	public IEnumerator Notification (string text) {
 		notificationText.text = text;
 		yield return new WaitForSeconds (notificationWaitTime);
 		notificationText.text = "";
 		// wait 4 seconds then remove text
 	}
 
-	public void AddNotification (string text) {
-		Debug.Log ("Starting coroutine Notificaiton with argument : " + text);
-		StartCoroutine (Notification (text));
-	}
-
 	void LevelCompleated () {
 		gameOverText.text = "YOU WIN!";
 		restartText.text = "Press 'R' to restart";
 		restart = true;
+	}
+
+	public float PlayerSpeedChange (float newSpeed) {
+		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
+		if (pc == null) {
+			Debug.Log ("cannt find player controller from Game controller");
+		}
+		pc.speed += newSpeed;
+		StartCoroutine (Notification ("Speed : " + pc.speed));
+		return pc.speed;
 	}
 }

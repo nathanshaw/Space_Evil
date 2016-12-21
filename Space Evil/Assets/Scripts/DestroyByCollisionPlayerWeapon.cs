@@ -6,9 +6,8 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 
 	public GameObject explosion;
 	public GameObject playerExplosion;
-	public float hitPoints;
+	public float damage;
 
-	public int scoreValue;
 	private GameController gameController;
 	private GameObject gameControllerObject;
 
@@ -25,11 +24,11 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
+		Debug.Log ("PLAYER WEAPON COLLIDED WITH : " + other.tag);
 		if (other.CompareTag ("Active Enemy") ||
 		    other.CompareTag ("Passive Enemy")) {
 			// if the hit does enough damage...
 			Instantiate (explosion, transform.position, transform.rotation);
-			gameController.AddScore (scoreValue);
 			Destroy (other.gameObject);
 			Destroy (gameObject);
 		}

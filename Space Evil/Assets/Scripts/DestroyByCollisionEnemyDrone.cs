@@ -31,5 +31,10 @@ public class DestroyByCollisionEnemyDrone : MonoBehaviour {
 			Destroy (gameObject);
 			gameController.PlayerHit (damage);
 		}
+		// for some reason the bolt destroy by collision does not work
+		else if (other.CompareTag ("Player Weapon")) {
+			Instantiate (explosion, transform.position, transform.rotation);
+			Destroy (gameObject);
+		}
 	}
 }

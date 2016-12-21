@@ -7,9 +7,7 @@ public class SpeedPowerUp : MonoBehaviour {
 	public int scoreValue;
 	private GameController gameController;
 	private GameObject gameControllerObject;
-	//private GameObject player;
-	//private GameObject playerObject;
-	public PlayerController playerController;
+	public float speedIncrease;
 
 	void Start () {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
@@ -19,25 +17,13 @@ public class SpeedPowerUp : MonoBehaviour {
 		if (gameController == null) {
 			Debug.Log ("Cannot find 'GameController' script");
 		}
-		/*
-		player = GameObject.FindWithTag ("Player");
-		if (player != null) {
-			playerObject = player.GetComponent<GameObject> ();
-		}
-		if (playerObject == null) {
-			Debug.Log("Cannot find 'player' object");
-		}
-		*/
 	}
 
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
 		if (other.CompareTag ("Player") ) {
-			playerController.speed += 10;
-			Debug.Log ("Speed increased to : " + playerController.speed);
-			gameController.AddScore (scoreValue);
-			Destroy (gameObject);
+			gameController.PlayerSpeedChange (speedIncrease);
 		}
 	}
 }
