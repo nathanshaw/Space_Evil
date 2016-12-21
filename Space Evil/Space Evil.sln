@@ -1,7 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
-Project("{862A2E07-5F6E-1F8A-49B5-AE4642B57F2D}") = "Space Shooter", "Assembly-CSharp.csproj", "{28FCF307-BCEB-DF00-C466-08C29A16E02D}"
+Project("{9A96F661-30F5-7B7E-29D8-0EDB4DD34C0C}") = "Space Evil", "Assembly-CSharp.csproj", "{A0DA60A2-2F36-59EF-9D50-74FBC3D1E1ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{28FCF307-BCEB-DF00-C466-08C29A16E02D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28FCF307-BCEB-DF00-C466-08C29A16E02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28FCF307-BCEB-DF00-C466-08C29A16E02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28FCF307-BCEB-DF00-C466-08C29A16E02D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0DA60A2-2F36-59EF-9D50-74FBC3D1E1ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0DA60A2-2F36-59EF-9D50-74FBC3D1E1ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0DA60A2-2F36-59EF-9D50-74FBC3D1E1ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0DA60A2-2F36-59EF-9D50-74FBC3D1E1ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

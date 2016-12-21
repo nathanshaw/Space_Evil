@@ -14,10 +14,14 @@ public class WeaponController : MonoBehaviour {
 	private AudioSource audioSource;
 
 	void Start() {
-		audioSource = GetComponent<AudioSource> ();
-		halfRange = fireRateRandomRange * 0.5;
-		InvokeRepeating ("Fire", initialDelay, Random.RandomRange(fireRate - halfRange
-			, fireRate + halfRange);
+		halfRange = fireRateRandomRange * 0.5f;
+		InvokeRepeating (
+			"Fire", 
+			initialDelay, 
+			Random.Range(
+				fireRate - halfRange,
+				fireRate + halfRange)
+		);
 		
 	}
 
@@ -27,6 +31,7 @@ public class WeaponController : MonoBehaviour {
 			shotSpawn.transform.position, 
 			shotSpawn.transform.rotation
 		);
-		audioSouce.Play ();
+
+		//audioSouce.Play ();
 	}
 }

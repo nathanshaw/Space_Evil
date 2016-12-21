@@ -12,12 +12,12 @@ public class PlayerController : MonoBehaviour
 {
 	public Boundary boundary;
 	public float speed;
-	public float vTilt;
-	public float hTilt;
+	private float vTilt;
+	private float hTilt;
 	public GameObject bolt;
 	public Transform boltSpawn;
 	public float boltFireRate;
-	public float nextFire;
+	private float nextFire;
 	private AudioSource audioSource;
 
 	void Start() {
