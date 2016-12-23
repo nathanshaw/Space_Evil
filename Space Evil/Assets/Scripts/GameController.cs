@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
 	public GameObject[] aestroids;
 	public GameObject[] enemyDrones;
 	public GameObject[] commonPowerUps;
+	public GameObject healthBar;
 
 	public Vector3 spawnValues;
 	public int hazardCount;
@@ -39,6 +40,7 @@ public class GameController : MonoBehaviour
 
 	// player states
 	public float playerHitPoints;
+	public float playerMaxHitPoints;
 
 	// text
 	private bool gameOver;
@@ -138,14 +140,20 @@ public class GameController : MonoBehaviour
 						 player.transform.position, 
 						 player.transform.rotation);
 			hitPointsText.text = "0";
+			setHealthBarSize ();
 			return 1;
 		}
 		hitPointsText.text = "" + damage;
-		Quad healthBar = gameObject.GetComponent (typeof(Quad)) as Quad;
-		if (Quad == null) {
-			Debug.Log ("Was unable to find the healthbar Quad");
-		}
+		setHealthBarSize ();
 		return 0;
+	}
+
+	void setHealthBarSize() {
+		Debug.Log("scale should be : " + (playerHitPoints / playerMaxHitPoints) * 10);
+			healthBar.transform.localScale = new Vector3(
+				(playerHitPoints / playerMaxHitPoints) * 10, 
+				healthBar.transform.localScale.y, 
+				healthBar.transform.localScale.z);		
 	}
 
 	void UpdateScore () {
