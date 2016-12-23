@@ -8,6 +8,8 @@ public class Boundary
 	public float xMin, xMax, zMin, zMax;
 }
 
+// make public class for all of the player stats
+
 public class PlayerController : MonoBehaviour 
 {
 	public Boundary boundary;
@@ -16,7 +18,11 @@ public class PlayerController : MonoBehaviour
 	public float hTilt;
 	public GameObject bolt;
 	public Transform boltSpawn;
-	public float boltFireRate;
+
+	// this is number of bolts a second...
+	public float shotsPerSecond;
+	private float timeBetweenBolts;
+
 	public float maxHitPoints;
 	public float currentHitPoints;
 	public float boltDamage;
@@ -31,7 +37,8 @@ public class PlayerController : MonoBehaviour
 	//code that is run for every frame
 	void Update() {
 		if (Input.GetButton ("Fire1") && Time.time > nextFire) {
-			nextFire = Time.time + boltFireRate;
+			timeBetweenBolts = 1 / shotsPerSecond;
+			nextFire = Time.time + timeBetweenBolts;
 			Instantiate (bolt, boltSpawn.position, boltSpawn.rotation);
 			audioSource.Play();
 		};

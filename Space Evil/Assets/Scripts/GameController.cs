@@ -141,6 +141,10 @@ public class GameController : MonoBehaviour
 			return 1;
 		}
 		hitPointsText.text = "" + damage;
+		Quad healthBar = gameObject.GetComponent (typeof(Quad)) as Quad;
+		if (Quad == null) {
+			Debug.Log ("Was unable to find the healthbar Quad");
+		}
 		return 0;
 	}
 
@@ -174,5 +178,15 @@ public class GameController : MonoBehaviour
 		pc.speed += newSpeed;
 		StartCoroutine (Notification ("Speed : " + pc.speed));
 		return pc.speed;
+	}
+
+	public float PlayerFireRateChange (float fireRateChange) {
+		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
+		if (pc == null) {
+			Debug.Log ("cannt find player controller from Game controller");
+		}
+		pc.shotsPerSecond += fireRateChange;
+		StartCoroutine (Notification ("Fire Rate : " + pc.shotsPerSecond));
+		return pc.shotsPerSecond;
 	}
 }
