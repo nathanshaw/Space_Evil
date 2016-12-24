@@ -68,61 +68,72 @@ public class GameController : MonoBehaviour
 	}
 
 	IEnumerator SpawnWaves() {
-		Quaternion spawnRotation = Quaternion.identity;
 		yield return new WaitForSeconds (startWait);
 		for (int w = 0; w < waveCount; w++) {
 			// decrease the time inbetween aestroid spawns
 			spawnWait *= waveRespawnMult;
-
-			// spawn a speed powerup inbetween each wave
-			GameObject powerup = commonPowerUps [Random.Range (0, commonPowerUps.Length)];
-			Vector3 powerUpSpawnPosition = new Vector3 (
-				spawnValues.x, spawnValues.y, Random.Range (-spawnValues.z, spawnValues.z)
-			);
-			GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
-
 			// increase the number of hazards by the wave number we are on
 			hazardCount += w;
 			yield return new WaitForSeconds (waveWait);
 			for (int i = 0; i < hazardCount; i++) {
-				GameObject aestroid = aestroids [Random.Range (0, aestroids.Length)];
-				Vector3 spawnPosition = new Vector3 (
-					                        spawnValues.x, spawnValues.y, Random.Range (-spawnValues.z, spawnValues.z)
-				                        );
-				GameObject aestroidClone = Instantiate (aestroid, spawnPosition, spawnRotation) as GameObject;
-
-				// change scale to be random
-				Vector3 scale = new Vector3 (
-					                Random.Range (aestroidMinSize, aestroidMaxSize),
-					                Random.Range (aestroidMinSize, aestroidMaxSize),
-					                Random.Range (aestroidMinSize, aestroidMaxSize)
-				                );
-				aestroidClone.transform.localScale = scale;
+				spawnRandomAestroid ();
 				if (waveCount >= firstEnemyWave) {
 					enemyDroneCount++;
-					GameObject enemyDrone = enemyDrones [Random.Range (0, enemyDrones.Length)];
-					Quaternion droneSpawnRotation = Quaternion.AngleAxis(270, Vector3.up);
-					Vector3 droneSpawnPosition = new Vector3 (
-						spawnValues.x, spawnValues.y, 
-						Random.Range (-spawnValues.z, spawnValues.z)
-					);
-					GameObject droneClone = Instantiate (enemyDrone, 
-						droneSpawnPosition, droneSpawnRotation) as GameObject;
-					// hack to get them facing the right way
-					droneClone.transform.RotateAround(droneClone.transform.position, droneClone.transform.up, Time.deltaTime * 180.0f);
+					spawnEnemyDrone ();
 				}
-
 				yield return new WaitForSeconds (spawnWait);
 			}
-				if (gameOver) {
+			if (gameOver) {
 					restart = true;
 					restartText.text = "Press 'R' to restart";
 					break;
-				}
 			}
+		}
 		if (gameOver == false && restart == false) {
 			LevelCompleated ();
 		}
+	}
+
+	GameObject spawnPowerUp () {
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject powerup = commonPowerUps [Random.Range (0, commonPowerUps.Length)];
+		Vector3 powerUpSpawnPosition = new Vector3 (
+			spawnValues.x, spawnValues.y, Random.Range (-spawnValues.z, spawnValues.z)
+		);
+		GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
+		return powerupClone;
+	}
+
+	GameObject spawnEnemyDrone () { 
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject enemyDrone = enemyDrones [Random.Range (0, enemyDrones.Length)];
+		Quaternion droneSpawnRotation = Quaternion.AngleAxis(270, Vector3.up);
+		Vector3 droneSpawnPosition = new Vector3 (
+			spawnValues.x, spawnValues.y, 
+			Random.Range (-spawnValues.z, spawnValues.z)
+		);
+		GameObject droneClone = Instantiate (enemyDrone, 
+			droneSpawnPosition, droneSpawnRotation) as GameObject;
+		// hack to get them facing the right way
+		droneClone.transform.RotateAround(droneClone.transform.position, droneClone.transform.up, Time.deltaTime * 180.0f);
+		return droneClone;
+	}
+
+	GameObject spawnRandomAestroid () {
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject aestroid = aestroids [Random.Range (0, aestroids.Length)];
+		Vector3 spawnPosition = new Vector3 (
+			spawnValues.x, spawnValues.y, Random.Range (-spawnValues.z, spawnValues.z)
+		);
+		GameObject aestroidClone = Instantiate (aestroid, spawnPosition, spawnRotation) as GameObject;
+		// change scale to be random
+		Vector3 scale = new Vector3 (
+			Random.Range (aestroidMinSize, aestroidMaxSize),
+			Random.Range (aestroidMinSize, aestroidMaxSize),
+			Random.Range (aestroidMinSize, aestroidMaxSize)
+		);
+		aestroidClone.transform.localScale = scale;
+		return aestroidClone;
 	}
 
 	public void AddScore (int newScoreValue) {
@@ -132,6 +143,7 @@ public class GameController : MonoBehaviour
 
 	public int PlayerHit(float damage) {
 		playerHitPoints -= damage;
+		setHealthBar ();
 		Debug.Log ("Player Took Damage, Current Hit Points : " + playerHitPoints);
 		if (playerHitPoints < 0 || playerHitPoints == 0) {
 			GameOver ();
@@ -140,20 +152,31 @@ public class GameController : MonoBehaviour
 						 player.transform.position, 
 						 player.transform.rotation);
 			hitPointsText.text = "0";
-			setHealthBarSize ();
 			return 1;
 		}
 		hitPointsText.text = "" + damage;
-		setHealthBarSize ();
 		return 0;
 	}
 
-	void setHealthBarSize() {
-		Debug.Log("scale should be : " + (playerHitPoints / playerMaxHitPoints) * 10);
-			healthBar.transform.localScale = new Vector3(
-				(playerHitPoints / playerMaxHitPoints) * 10, 
-				healthBar.transform.localScale.y, 
-				healthBar.transform.localScale.z);		
+	void setHealthBar() {
+		//Debug.Log("scale should be : " + (playerHitPoints / playerMaxHitPoints) * 10);
+		float normalizedScale = playerHitPoints / playerMaxHitPoints;
+		healthBar.transform.localScale = new Vector3(
+			normalizedScale * 10, 
+			healthBar.transform.localScale.y, 
+			healthBar.transform.localScale.z
+		);
+
+		// set the healthbar color
+		if (normalizedScale > 0.5) {
+			healthBar.GetComponent<Renderer> ().material.color = Color.green;
+		} 
+		else if (normalizedScale > 0.25f) {
+			healthBar.GetComponent<Renderer> ().material.color = Color.yellow;
+		} 
+		else {
+			healthBar.GetComponent<Renderer> ().material.color = Color.red;
+		}
 	}
 
 	void UpdateScore () {
