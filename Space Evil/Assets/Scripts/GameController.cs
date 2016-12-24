@@ -204,14 +204,36 @@ public class GameController : MonoBehaviour
 		restart = true;
 	}
 
-	public float PlayerSpeedChange (float newSpeed) {
+	public float PlayerSpeedChange (float speedChange) {
 		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
 		if (pc == null) {
 			Debug.Log ("cannt find player controller from Game controller");
 		}
-		pc.speed += newSpeed;
+		pc.speed += speedChange;
 		StartCoroutine (Notification ("Speed : " + pc.speed));
 		return pc.speed;
+	}
+
+	public float PlayerHealthChange (float healthChange) {
+		// TODO move all player info to player controller
+		playerHitPoints += healthChange;
+		if (playerHitPoints > playerMaxHitPoints) {
+			playerHitPoints = playerMaxHitPoints;
+		}
+		updateHealthBar ();
+		StartCoroutine (Notification ("HP : " + playerHitPoints));
+		return playerHitPoints;
+	}
+
+	public float PlayerMaxHealthChange (float maxHealthChange) {
+		// TODO move all player info to player controller
+		playerMaxHitPoints += maxHealthChange;
+		if (playerMaxHitPoints < 50) {
+			playerMaxHitPoints = 50;
+		}
+		updateHealthBar ();
+		StartCoroutine (Notification ("Max HP : " + playerMaxHitPoints));
+		return playerHitPoints;
 	}
 
 	public float PlayerFireRateChange (float fireRateChange) {

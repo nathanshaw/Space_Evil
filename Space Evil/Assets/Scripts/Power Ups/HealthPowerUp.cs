@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
+public class HealthPowerUp : MonoBehaviour {
 
-	public GameObject explosion;
-	public GameObject playerExplosion;
-	public float damage;
-
+	public int scoreValue;
 	private GameController gameController;
 	private GameObject gameControllerObject;
+	public float healthIncrease;
 
 	void Start () {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
@@ -24,11 +22,8 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.CompareTag ("Active Enemy") ||
-		    other.CompareTag ("Passive Enemy")) {
-			Instantiate (explosion, transform.position, transform.rotation);
-			Destroy (other.gameObject);
-			Destroy (gameObject);
+		if (other.CompareTag ("Player") ) {
+			gameController.PlayerHealthChange (healthIncrease);
 		}
 	}
 }
