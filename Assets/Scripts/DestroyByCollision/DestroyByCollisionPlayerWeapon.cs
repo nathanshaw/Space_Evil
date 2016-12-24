@@ -10,6 +10,7 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 
 	private GameController gameController;
 	private GameObject gameControllerObject;
+	private EnemyProperties enemyProperties;
 
 	void Start () {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
@@ -27,6 +28,10 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 		if (other.CompareTag ("Active Enemy") ||
 		    other.CompareTag ("Passive Enemy")) {
 			Instantiate (explosion, transform.position, transform.rotation);
+			// add the value of enemy to the total score
+			enemyProperties = other.gameObject.GetComponent<EnemyProperties>();
+			Debug.Log ("enemy properties : " + enemyProperties.scoreValue);
+			gameController.AddScore(enemyProperties.scoreValue);
 			Destroy (other.gameObject);
 			Destroy (gameObject);
 		}

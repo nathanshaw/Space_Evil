@@ -74,6 +74,7 @@ public class GameController : MonoBehaviour
 			// decrease the time inbetween aestroid spawns
 			spawnPowerUp ();
 			spawnWait *= waveRespawnMult;
+			AddScore (w * 1000);
 			// increase the number of hazards by the wave number we are on
 			hazardCount += w;
 			StartCoroutine (Notification ("Wave : " + w));
@@ -171,15 +172,12 @@ public class GameController : MonoBehaviour
 
 		// set the healthbar color
 		if (normalizedScale > 0.5) {
-			Debug.Log("scale should be green : " + normalizedScale);
 			healthBar.GetComponent<Renderer> ().material.color = Color.green;
 		} 
 		else if (normalizedScale > 0.25f) {
-			Debug.Log("scale should be yellow : " + normalizedScale);
 			healthBar.GetComponent<Renderer> ().material.color = Color.yellow;
 		} 
 		else {
-			Debug.Log("scale should be red : " + normalizedScale);
 			healthBar.GetComponent<Renderer> ().material.color = Color.red;
 		}
 	}
