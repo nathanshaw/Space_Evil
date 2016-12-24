@@ -56,6 +56,7 @@ public class GameController : MonoBehaviour
 		score = 0;
 		UpdateScore ();
 		StartCoroutine (SpawnWaves ());
+		updateHealthBar ();
 	}
 
 	void Update ()
@@ -143,8 +144,8 @@ public class GameController : MonoBehaviour
 
 	public int PlayerHit(float damage) {
 		playerHitPoints -= damage;
-		setHealthBar ();
-		Debug.Log ("Player Took Damage, Current Hit Points : " + playerHitPoints);
+		updateHealthBar ();
+		// Debug.Log ("Player Took Damage, Current Hit Points : " + playerHitPoints);
 		if (playerHitPoints < 0 || playerHitPoints == 0) {
 			GameOver ();
 			Destroy (player);
@@ -158,8 +159,7 @@ public class GameController : MonoBehaviour
 		return 0;
 	}
 
-	void setHealthBar() {
-		//Debug.Log("scale should be : " + (playerHitPoints / playerMaxHitPoints) * 10);
+	void updateHealthBar() {
 		float normalizedScale = playerHitPoints / playerMaxHitPoints;
 		healthBar.transform.localScale = new Vector3(
 			normalizedScale * 10, 
@@ -169,12 +169,15 @@ public class GameController : MonoBehaviour
 
 		// set the healthbar color
 		if (normalizedScale > 0.5) {
+			Debug.Log("scale should be green : " + normalizedScale);
 			healthBar.GetComponent<Renderer> ().material.color = Color.green;
 		} 
 		else if (normalizedScale > 0.25f) {
+			Debug.Log("scale should be yellow : " + normalizedScale);
 			healthBar.GetComponent<Renderer> ().material.color = Color.yellow;
 		} 
 		else {
+			Debug.Log("scale should be red : " + normalizedScale);
 			healthBar.GetComponent<Renderer> ().material.color = Color.red;
 		}
 	}
