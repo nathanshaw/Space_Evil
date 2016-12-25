@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 	public float speed;
 	public float vTilt;
 	public float hTilt;
-	public GameObject bolt;
+	public GameObject[] bolts;
 	public Transform[] boltSpawns;
 
 	// this is number of bolts a second...
@@ -41,9 +41,9 @@ public class PlayerController : MonoBehaviour
 			timeBetweenBolts = 1 / shotsPerSecond;
 			nextFire = Time.time + timeBetweenBolts;
 			for (int i = 0; i < activeBolts; i++) {
-				Instantiate (bolt, boltSpawns[i].position, boltSpawns[i].rotation);
+				Instantiate (bolts[i], boltSpawns[i].position, boltSpawns[i].rotation);
 			}
-			audioSource.Play();
+			audioSource.Play ();
 		};
 			// TODO make it so you can do manual fireing
 	}
@@ -64,5 +64,4 @@ public class PlayerController : MonoBehaviour
 		);
 		rigidbody.rotation = Quaternion.Euler(rigidbody.velocity.x * hTilt, 90, rigidbody.velocity.z * vTilt);
 	}
-
 }

@@ -214,6 +214,21 @@ public class GameController : MonoBehaviour
 		return pc.speed;
 	}
 
+	public float PlayerMultiShotChange (int multiShotChange) {
+		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
+		if (pc == null) {
+			Debug.Log ("cannt find player controller from Game controller");
+		}
+		pc.activeBolts += multiShotChange;
+		if (pc.activeBolts < 0) {
+			pc.activeBolts = 0;
+		} else if (pc.activeBolts > pc.bolts.Length) {
+			pc.activeBolts = pc.bolts.Length;
+		}
+		StartCoroutine (Notification ("MultiShot : " + pc.activeBolts));
+		return pc.activeBolts;
+	}
+
 	public float PlayerHealthChange (float healthChange) {
 		// TODO move all player info to player controller
 		playerHitPoints += healthChange;
