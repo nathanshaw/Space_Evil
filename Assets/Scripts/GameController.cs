@@ -214,6 +214,22 @@ public class GameController : MonoBehaviour
 		return pc.speed;
 	}
 
+	public float PlayerBoltSpeedChange (float boltSpeedChange) {
+		// get all the bolt objects from player controller 
+		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
+		if (pc == null) {
+			Debug.Log ("cannt find player controller from Game controller");
+		}
+		for (int i = 0; i < pc.bolts.Length; i++) {
+			Mover boltMover = pc.bolts [i].GetComponent<Mover> ();
+			boltMover.xSpeedMax += boltSpeedChange;
+			boltMover.xSpeedMin += boltSpeedChange;
+			Debug.Log("boltMover xspeed changed to : " + boltMover.xSpeedMax);
+		}
+		StartCoroutine (Notification ("Bolt Speed change : " + boltSpeedChange));
+		return boltSpeedChange;
+	}
+
 	public float PlayerMultiShotChange (int multiShotChange) {
 		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
 		if (pc == null) {
