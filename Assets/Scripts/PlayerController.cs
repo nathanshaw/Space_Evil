@@ -45,16 +45,18 @@ public class PlayerController : MonoBehaviour
 
 	void Start() {
 		audioSource = GetComponent<AudioSource> ();
+
 	}
 
 	//code that is run for every frame
 	void Update() {
 		if (Input.GetButton ("Fire1") && Time.time > nextFire) {
+			fireButtonPressed = true;
 			timeBetweenBolts = 1 / shotsPerSecond;
 			// bolts
 			nextFire = Time.time + timeBetweenBolts;
 			for (int i = 0; i < activeBolts; i++) {
-				Instantiate (bolts[i], boltSpawns[i].position, boltSpawns[i].rotation);
+				Instantiate (bolts [i], boltSpawns [i].position, boltSpawns [i].rotation);
 			}
 			audioSource.Play ();
 			// side gun
@@ -66,7 +68,29 @@ public class PlayerController : MonoBehaviour
 				topBolt.transform.localScale = scale;
 				bottomBolt.transform.localScale = scale;
 			}
-		};
+		} else if (Input.GetButton ("Fire1") == false) {
+			fireButtonPressed = false;
+		} else if (fireButtonPressed == false && Input.GetButton ("Fire1")) {
+			fireButtonPressed = true;
+			timeBetweenBolts = 1 / shotsPerSecond;
+			// bolts
+			nextFire = Time.time + timeBetweenBolts;
+			for (int i = 0; i < activeBolts; i++) {
+				Instantiate (bolts [i], boltSpawns [i].position, boltSpawns [i].rotation);
+			}
+			audioSource.Play ();
+			// side gun
+			if (sideGunSize > 0) {
+				GameObject topBolt = Instantiate (topSideBolt, topSideSpawn.position, topSideSpawn.rotation) as GameObject;  
+				GameObject bottomBolt = Instantiate (bottomSideBolt, bottomSideSpawn.position, bottomSideSpawn.rotation) as GameObject;
+				// TODO, make it so the side bolts can have their sizes changed...
+				Vector3 scale = new Vector3 (1.0f, 1.0f, sideGunSize);
+				topBolt.transform.localScale = scale;
+				bottomBolt.transform.localScale = scale;
+			}
+		}else if (Input.GetButton ("Fire1")) {
+			fireButtonPressed = true;
+		}
 			// TODO make it so you can do manual fireing
 	}
 

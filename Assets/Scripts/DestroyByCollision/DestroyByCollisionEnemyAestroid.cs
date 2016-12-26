@@ -32,9 +32,11 @@ public class DestroyByCollisionEnemyAestroid : MonoBehaviour {
 			Destroy (gameObject);
 		} 
 		// for some reason the bolt destroy by collision does not work
+		/*
 		else if (other.CompareTag ("Player Weapon")) {
 			Instantiate (explosion, transform.position, transform.rotation);
 			Destroy (gameObject);
 		}
+		*/
 	}
 }

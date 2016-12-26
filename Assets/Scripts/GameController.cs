@@ -41,6 +41,7 @@ public class GameController : MonoBehaviour
 	// player states
 	public float playerHitPoints;
 	public float playerMaxHitPoints;
+	public float playerBoltStartSpeed;
 
 	// text
 	private bool gameOver;
@@ -58,6 +59,16 @@ public class GameController : MonoBehaviour
 		UpdateScore ();
 		StartCoroutine (SpawnWaves ());
 		updateHealthBar ();
+
+		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
+		if (pc == null) {
+			Debug.Log ("cannt find player controller from Game controller");
+		}
+		for (int i = 0; i < pc.bolts.Length; i++) {
+			Mover boltMover = pc.bolts [i].GetComponent<Mover> ();
+			boltMover.xSpeedMax = playerBoltStartSpeed;
+			boltMover.xSpeedMin = playerBoltStartSpeed;
+		}
 	}
 
 	void Update ()
