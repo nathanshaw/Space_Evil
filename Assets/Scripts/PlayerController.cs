@@ -17,6 +17,11 @@ public class PlayerController : MonoBehaviour
 	public float vTilt;
 	public float hTilt;
 	public GameObject[] bolts;
+	public GameObject topSideBolt;
+	public GameObject bottomSideBolt;
+	public Transform bottomSideSpawn;
+	public Transform topSideSpawn;
+
 	public Transform[] boltSpawns;
 
 	// this is number of bolts a second...
@@ -31,6 +36,13 @@ public class PlayerController : MonoBehaviour
 	private float nextFire;
 	private AudioSource audioSource;
 
+	// side gun
+	public float sideGunSize;
+
+	// to keep track of button presses
+	// TODO, add this
+	private bool fireButtonPressed;
+
 	void Start() {
 		audioSource = GetComponent<AudioSource> ();
 	}
@@ -39,11 +51,21 @@ public class PlayerController : MonoBehaviour
 	void Update() {
 		if (Input.GetButton ("Fire1") && Time.time > nextFire) {
 			timeBetweenBolts = 1 / shotsPerSecond;
+			// bolts
 			nextFire = Time.time + timeBetweenBolts;
 			for (int i = 0; i < activeBolts; i++) {
 				Instantiate (bolts[i], boltSpawns[i].position, boltSpawns[i].rotation);
 			}
 			audioSource.Play ();
+			// side gun
+			if (sideGunSize > 0) {
+				GameObject topBolt = Instantiate (topSideBolt, topSideSpawn.position, topSideSpawn.rotation) as GameObject;  
+				GameObject bottomBolt = Instantiate (bottomSideBolt, bottomSideSpawn.position, bottomSideSpawn.rotation) as GameObject;
+				// TODO, make it so the side bolts can have their sizes changed...
+				Vector3 scale = new Vector3 (1.0f, 1.0f, sideGunSize);
+				topBolt.transform.localScale = scale;
+				bottomBolt.transform.localScale = scale;
+			}
 		};
 			// TODO make it so you can do manual fireing
 	}

@@ -23,7 +23,6 @@ public class WeaponController : MonoBehaviour {
 				fireRate - halfRange,
 				fireRate + halfRange)
 		);
-
 	}
 
 	void Fire () {

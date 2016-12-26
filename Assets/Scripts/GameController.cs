@@ -46,6 +46,7 @@ public class GameController : MonoBehaviour
 	private bool gameOver;
 	private bool restart;
 
+
 	void Start () {
 		restart = false;
 		gameOver = false;
@@ -211,6 +212,16 @@ public class GameController : MonoBehaviour
 		}
 		pc.speed += speedChange;
 		StartCoroutine (Notification ("Speed : " + pc.speed));
+		return pc.speed;
+	}
+
+	public float PlayerSideSizeChange (float sideSizeChange) {
+		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
+		if (pc == null) {
+			Debug.Log ("cannt find player controller from Game controller");
+		}
+		pc.sideGunSize += sideSizeChange;
+		StartCoroutine (Notification ("Side Size : " + pc.sideGunSize));
 		return pc.speed;
 	}
 
