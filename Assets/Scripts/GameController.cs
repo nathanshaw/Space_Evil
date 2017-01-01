@@ -23,17 +23,24 @@ public class GameController : MonoBehaviour
 	public int enemyDroneCount;
 
 	// for keeping track of the score
+	// TODO turn this into upper left
 	public GUIText scoreText;
 	private int score;
 
 	public GUIText restartText;
 	public GUIText gameOverText;
+	// turn this into lower left notification
 	public GUIText hitPointsText;
 
 	// keeping track of notifications
-	public GUIText notificationText;
-	public float notificationWaitTime;
-	private bool notificationBeingDisplayed;
+	// upper right 
+	public GUIText urNotificationText;
+	public float urNotificationWaitTime;
+	private bool urNotificationBeingDisplayed;
+	// lower right
+	public GUIText lrNotificationText;
+	public float lrNotificationWaitTime;
+	private bool lrNotificationBeingDisplayed;
 
 	// Player object
 	public GameObject player;
@@ -55,7 +62,8 @@ public class GameController : MonoBehaviour
 		restartText.text = "";
 		gameOverText.text = "";
 		hitPointsText.text = "" + playerHitPoints;
-		notificationText.text = "";
+		lrNotificationText.text = "";
+		urNotificationText.text = "";
 		score = 0;
 		UpdateScore ();
 		StartCoroutine (SpawnWaves ());
@@ -90,7 +98,7 @@ public class GameController : MonoBehaviour
 			AddScore (w * 1000);
 			// increase the number of hazards by the wave number we are on
 			hazardCount += w;
-			StartCoroutine (Notification ("Wave : " + w));
+			StartCoroutine (UpperRightNotification ("Wave : " + w));
 			yield return new WaitForSeconds (waveWait);
 			for (int i = 0; i < hazardCount; i++) {
 				spawnRandomAestroid ();
@@ -204,23 +212,43 @@ public class GameController : MonoBehaviour
 		gameOver = true;
 	}
 
-	public IEnumerator Notification (string text) {
-		if (notificationBeingDisplayed == false) {
-			notificationBeingDisplayed = true;
-			notificationText.text = text;
-			yield return new WaitForSeconds (notificationWaitTime);
-			notificationText.text = "";
-			notificationBeingDisplayed = false;
+	public IEnumerator LowerRightNotification (string text) {
+		if (lrNotificationBeingDisplayed == false) {
+			lrNotificationBeingDisplayed = true;
+			lrNotificationText.text = text;
+			yield return new WaitForSeconds (lrNotificationWaitTime);
+			lrNotificationText.text = "";
+			lrNotificationBeingDisplayed = false;
 			// wait 4 seconds then remove text
 		} else {
-			while (notificationBeingDisplayed == true) {
+			while (lrNotificationBeingDisplayed == true) {
 				yield return new WaitForSeconds (0.3f);
 			}
-			notificationBeingDisplayed = true;
-			notificationText.text = text;
-			yield return new WaitForSeconds (notificationWaitTime);
-			notificationText.text = "";
-			notificationBeingDisplayed = false;
+			lrNotificationBeingDisplayed = true;
+			lrNotificationText.text = text;
+			yield return new WaitForSeconds (lrNotificationWaitTime * 0.6f);
+			lrNotificationText.text = "";
+			lrNotificationBeingDisplayed = false;
+		}
+	}
+
+	public IEnumerator UpperRightNotification (string text) {
+		if (urNotificationBeingDisplayed == false) {
+			urNotificationBeingDisplayed = true;
+			urNotificationText.text = text;
+			yield return new WaitForSeconds (urNotificationWaitTime);
+			urNotificationText.text = "";
+			urNotificationBeingDisplayed = false;
+			// wait 4 seconds then remove text
+		} else {
+			while (urNotificationBeingDisplayed == true) {
+				yield return new WaitForSeconds (0.3f);
+			}
+			urNotificationBeingDisplayed = true;
+			urNotificationText.text = text;
+			yield return new WaitForSeconds (urNotificationWaitTime * 0.6f);
+			urNotificationText.text = "";
+			urNotificationBeingDisplayed = false;
 		}
 	}
 
@@ -236,7 +264,7 @@ public class GameController : MonoBehaviour
 			Debug.Log ("cannt find player controller from Game controller");
 		}
 		pc.speed += speedChange;
-		StartCoroutine (Notification ("Speed : " + pc.speed));
+		StartCoroutine (LowerRightNotification ("Speed : " + pc.speed));
 		return pc.speed;
 	}
 
@@ -246,7 +274,7 @@ public class GameController : MonoBehaviour
 			Debug.Log ("cannt find player controller from Game controller");
 		}
 		pc.sideGunSize += sideSizeChange;
-		StartCoroutine (Notification ("Side Size : " + pc.sideGunSize));
+		StartCoroutine (LowerRightNotification ("Side Size : " + pc.sideGunSize));
 		return pc.speed;
 	}
 
@@ -262,7 +290,7 @@ public class GameController : MonoBehaviour
 			boltMover.xSpeedMin += boltSpeedChange;
 			Debug.Log("boltMover xspeed changed to : " + boltMover.xSpeedMax);
 		}
-		StartCoroutine (Notification ("Bolt Speed change : " + boltSpeedChange));
+		StartCoroutine (LowerRightNotification ("Bolt Speed change : " + boltSpeedChange));
 		return boltSpeedChange;
 	}
 
@@ -277,7 +305,7 @@ public class GameController : MonoBehaviour
 		} else if (pc.activeBolts > pc.bolts.Length) {
 			pc.activeBolts = pc.bolts.Length;
 		}
-		StartCoroutine (Notification ("MultiShot : " + pc.activeBolts));
+		StartCoroutine (LowerRightNotification ("MultiShot : " + pc.activeBolts));
 		return pc.activeBolts;
 	}
 
@@ -288,7 +316,7 @@ public class GameController : MonoBehaviour
 			playerHitPoints = playerMaxHitPoints;
 		}
 		updateHealthBar ();
-		StartCoroutine (Notification ("HP : " + playerHitPoints));
+		StartCoroutine (LowerRightNotification ("HP : " + playerHitPoints));
 		return playerHitPoints;
 	}
 
@@ -300,7 +328,7 @@ public class GameController : MonoBehaviour
 			playerMaxHitPoints = 50;
 		}
 		updateHealthBar ();
-		StartCoroutine (Notification ("Max HP : " + playerMaxHitPoints));
+		StartCoroutine (LowerRightNotification ("Max HP : " + playerMaxHitPoints));
 		return playerHitPoints;
 	}
 
@@ -310,7 +338,7 @@ public class GameController : MonoBehaviour
 			Debug.Log ("cannt find player controller from Game controller");
 		}
 		pc.shotsPerSecond += fireRateChange;
-		StartCoroutine (Notification ("Fire Rate : " + pc.shotsPerSecond));
+		StartCoroutine (LowerRightNotification ("Fire Rate : " + pc.shotsPerSecond));
 		return pc.shotsPerSecond;
 	}
 
@@ -320,6 +348,6 @@ public class GameController : MonoBehaviour
 			Debug.Log ("cannt find player controller from Game controller");
 		}
 		float boltDamage = pc.ChangeBoltDamage(boltDamageChange);
-		StartCoroutine (Notification ("Bolt Damage : " + boltDamage));
+		StartCoroutine (LowerRightNotification ("Bolt Damage : " + boltDamage));
 	}
 }

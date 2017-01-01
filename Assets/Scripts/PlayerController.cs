@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
 	// Player Attributes
 	public float shotsPerSecond;
 	private float timeBetweenBolts;
+	private float manualTimeBetweenBolts;
 	public float maxHitPoints;
 	public float currentHitPoints;
 
@@ -37,14 +38,14 @@ public class PlayerController : MonoBehaviour
 
 	// to keep track of fireing
 	private float nextAutoFire;
+	private float nextManualFire;
+	private bool fireButtonPressed;
+
 	private AudioSource audioSource;
 
 	// side gun
 	public float sideGunSize;
 
-	// to keep track of button presses
-	// TODO, add this
-	private bool fireButtonPressed;
 
 	void Start() {
 		audioSource = GetComponent<AudioSource> ();
@@ -53,20 +54,6 @@ public class PlayerController : MonoBehaviour
 
 	//code that is run for every frame
 	void Update() {
-
-		if (Input.anyKey) {
-			foreach (char c in Input.inputString) {
-				Debug.Log (c);
-			}
-		}
-		for (int i = 0;i < 20; i++) {
-			if(Input.GetKeyDown("joystick 1 button "+i)){
-				print("joystick 1 button "+i);
-			}
-		}
-		if (Input.GetKeyDown ("joystick button 0")) {
-			Debug.Log ("button 1 pressed");
-		}
 		if (Input.GetButton ("Fire1") && Time.time > nextAutoFire) {
 			fireButtonPressed = true;
 			timeBetweenBolts = 1 / shotsPerSecond;
@@ -87,11 +74,15 @@ public class PlayerController : MonoBehaviour
 			}
 		} else if (Input.GetButton ("Fire1") == false) {
 			fireButtonPressed = false;
-		} else if (fireButtonPressed == false && Input.GetButton ("Fire1")) {
+		} else if (fireButtonPressed == false && 
+				   Input.GetButton ("Fire1") &&
+				   Time.time > nextManualFire) 
+			{
 			fireButtonPressed = true;
 			timeBetweenBolts = 1 / shotsPerSecond;
-			// bolts
+			manualTimeBetweenBolts = 1 / (shotsPerSecond * 2);
 			nextAutoFire = Time.time + timeBetweenBolts;
+			nextManualFire = Time.time + manualTimeBetweenBolts;
 			for (int i = 0; i < activeBolts; i++) {
 				Instantiate (bolts [i], boltSpawns [i].position, boltSpawns [i].rotation);
 			}
@@ -108,7 +99,6 @@ public class PlayerController : MonoBehaviour
 		}else if (Input.GetButton ("Fire1")) {
 			fireButtonPressed = true;
 		}
-			// TODO make it so you can do manual fireing
 	}
 
 	// executed once per physics step
