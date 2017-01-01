@@ -299,4 +299,17 @@ public class GameController : MonoBehaviour
 		StartCoroutine (Notification ("Fire Rate : " + pc.shotsPerSecond));
 		return pc.shotsPerSecond;
 	}
+
+	public void PlayerBoltDamageChange (float boltDamageChange) {
+		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
+		if (pc == null) {
+			Debug.Log ("cannt find player controller from Game controller");
+		}
+		for (int i = 0; i < pc.bolts.Length; i++) {
+			// TODO
+			// pc.bolts [i].damage += boltDamageChange;
+
+		}
+		StartCoroutine (Notification ("Bolt Damage Increase : " + boltDamageChange));
+	}
 }

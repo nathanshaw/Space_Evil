@@ -50,6 +50,20 @@ public class PlayerController : MonoBehaviour
 
 	//code that is run for every frame
 	void Update() {
+
+		if (Input.anyKey) {
+			foreach (char c in Input.inputString) {
+				Debug.Log (c);
+			}
+		}
+		for (int i = 0;i < 20; i++) {
+			if(Input.GetKeyDown("joystick 1 button "+i)){
+				print("joystick 1 button "+i);
+			}
+		}
+		if (Input.GetKeyDown ("joystick button 0")) {
+			Debug.Log ("button 1 pressed");
+		}
 		if (Input.GetButton ("Fire1") && Time.time > nextFire) {
 			fireButtonPressed = true;
 			timeBetweenBolts = 1 / shotsPerSecond;
