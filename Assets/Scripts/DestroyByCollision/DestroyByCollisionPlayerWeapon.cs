@@ -6,7 +6,9 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 
 	public GameObject explosion;
 	public GameObject playerExplosion;
-	public float damage;
+	public float Damage;
+	public float StartingDamage;
+	public float MaxDamage;
 
 	private GameController gameController;
 	private GameObject gameControllerObject;
@@ -14,6 +16,8 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 
 	void Start () {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
+		// set damage to starting damage at start
+		Damage = StartingDamage;
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent<GameController>();
 		}
@@ -33,7 +37,7 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 			//Debug.Log ("enemy properties : " + enemyProperties.hitPoints);
 			Destroy (gameObject);
 			// Hit returns 1 if enemy has 0 or less hit points
-			enemyProperties.Hit (damage);
+			enemyProperties.Hit (Damage);
 			if (enemyProperties.hitPoints <= 0) {
 				gameController.AddScore (enemyProperties.scoreValue);
 				Destroy (other.gameObject);
@@ -42,6 +46,17 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 				//Debug.Log ("not destroyed : " + enemyProperties.hitPoints);
 			}
 			//Debug.Log ("-----------------------");
+		}
+	}
+
+	public void updateDamage (float change) {
+		Debug.Log ("Damage : " + Damage);
+		Damage += change;
+		Debug.Log ("Changed to : " + Damage);
+		if (Damage < 1) {
+			Damage = 1;
+		} else if (Damage > MaxDamage) {
+			Damage = MaxDamage;
 		}
 	}
 }

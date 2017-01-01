@@ -24,16 +24,19 @@ public class PlayerController : MonoBehaviour
 
 	public Transform[] boltSpawns;
 
-	// this is number of bolts a second...
+	// Player Attributes
 	public float shotsPerSecond;
 	private float timeBetweenBolts;
-
 	public float maxHitPoints;
 	public float currentHitPoints;
+
 	public float boltDamage;
+	public float startingBoltDamage;
+	public float maxBoltDamage;
 	public int activeBolts;
 
-	private float nextFire;
+	// to keep track of fireing
+	private float nextAutoFire;
 	private AudioSource audioSource;
 
 	// side gun
@@ -45,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
 	void Start() {
 		audioSource = GetComponent<AudioSource> ();
-
+		resetBoltDamage ();
 	}
 
 	//code that is run for every frame
@@ -64,11 +67,11 @@ public class PlayerController : MonoBehaviour
 		if (Input.GetKeyDown ("joystick button 0")) {
 			Debug.Log ("button 1 pressed");
 		}
-		if (Input.GetButton ("Fire1") && Time.time > nextFire) {
+		if (Input.GetButton ("Fire1") && Time.time > nextAutoFire) {
 			fireButtonPressed = true;
 			timeBetweenBolts = 1 / shotsPerSecond;
 			// bolts
-			nextFire = Time.time + timeBetweenBolts;
+			nextAutoFire = Time.time + timeBetweenBolts;
 			for (int i = 0; i < activeBolts; i++) {
 				Instantiate (bolts [i], boltSpawns [i].position, boltSpawns [i].rotation);
 			}
@@ -88,7 +91,7 @@ public class PlayerController : MonoBehaviour
 			fireButtonPressed = true;
 			timeBetweenBolts = 1 / shotsPerSecond;
 			// bolts
-			nextFire = Time.time + timeBetweenBolts;
+			nextAutoFire = Time.time + timeBetweenBolts;
 			for (int i = 0; i < activeBolts; i++) {
 				Instantiate (bolts [i], boltSpawns [i].position, boltSpawns [i].rotation);
 			}
@@ -123,5 +126,28 @@ public class PlayerController : MonoBehaviour
 			Mathf.Clamp(rigidbody.position.z, boundary.zMin, boundary.zMax)
 		);
 		rigidbody.rotation = Quaternion.Euler(rigidbody.velocity.x * hTilt, 90, rigidbody.velocity.z * vTilt);
+	}
+
+	public float ChangeBoltDamage (float damChange) {
+		// get all the bolts and update their damage;
+		// returns the damage of the first bolt
+		float updatedDamage = 0.0f;
+		for (int i = 0; i < bolts.Length; i++) {
+			DestroyByCollisionPlayerWeapon dbcPW = bolts[i].GetComponent<DestroyByCollisionPlayerWeapon>() as DestroyByCollisionPlayerWeapon;
+			dbcPW.updateDamage (damChange);
+			if (i == 0) {
+				updatedDamage = dbcPW.Damage;
+			}
+		}
+		return updatedDamage;
+	}
+
+	private void resetBoltDamage () {
+		for (int i = 0; i < bolts.Length; i++) {
+			DestroyByCollisionPlayerWeapon dbcPW = bolts[i].GetComponent<DestroyByCollisionPlayerWeapon>() as DestroyByCollisionPlayerWeapon;
+			dbcPW.Damage = startingBoltDamage;
+			dbcPW.MaxDamage = maxBoltDamage;
+			dbcPW.StartingDamage = startingBoltDamage;
+		}
 	}
 }

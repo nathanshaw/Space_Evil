@@ -33,6 +33,7 @@ public class GameController : MonoBehaviour
 	// keeping track of notifications
 	public GUIText notificationText;
 	public float notificationWaitTime;
+	private bool notificationBeingDisplayed;
 
 	// Player object
 	public GameObject player;
@@ -204,10 +205,23 @@ public class GameController : MonoBehaviour
 	}
 
 	public IEnumerator Notification (string text) {
-		notificationText.text = text;
-		yield return new WaitForSeconds (notificationWaitTime);
-		notificationText.text = "";
-		// wait 4 seconds then remove text
+		if (notificationBeingDisplayed == false) {
+			notificationBeingDisplayed = true;
+			notificationText.text = text;
+			yield return new WaitForSeconds (notificationWaitTime);
+			notificationText.text = "";
+			notificationBeingDisplayed = false;
+			// wait 4 seconds then remove text
+		} else {
+			while (notificationBeingDisplayed == true) {
+				yield return new WaitForSeconds (0.3f);
+			}
+			notificationBeingDisplayed = true;
+			notificationText.text = text;
+			yield return new WaitForSeconds (notificationWaitTime);
+			notificationText.text = "";
+			notificationBeingDisplayed = false;
+		}
 	}
 
 	void LevelCompleated () {
@@ -305,11 +319,7 @@ public class GameController : MonoBehaviour
 		if (pc == null) {
 			Debug.Log ("cannt find player controller from Game controller");
 		}
-		for (int i = 0; i < pc.bolts.Length; i++) {
-			// TODO
-			// pc.bolts [i].damage += boltDamageChange;
-
-		}
-		StartCoroutine (Notification ("Bolt Damage Increase : " + boltDamageChange));
+		float boltDamage = pc.ChangeBoltDamage(boltDamageChange);
+		StartCoroutine (Notification ("Bolt Damage : " + boltDamage));
 	}
 }
