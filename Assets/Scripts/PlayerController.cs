@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
 	public GameObject[] bolts;
 	public GameObject topSideBolt;
 	public GameObject bottomSideBolt;
+	public GameController gc;
 	public Transform bottomSideSpawn;
 	public Transform topSideSpawn;
 
@@ -40,12 +41,12 @@ public class PlayerController : MonoBehaviour
 	private float nextAutoFire;
 	private float nextManualFire;
 	private bool fireButtonPressed;
+	private bool startButtonPressed;
 
 	private AudioSource audioSource;
 
 	// side gun
 	public float sideGunSize;
-
 
 	void Start() {
 		audioSource = GetComponent<AudioSource> ();
@@ -54,6 +55,16 @@ public class PlayerController : MonoBehaviour
 
 	//code that is run for every frame
 	void Update() {
+		// see if the game has been paused
+		if (Input.GetButton ("Start")) {
+			if (startButtonPressed == false) {
+				startButtonPressed = true;
+				gc.RequestPause ();
+			}
+		} else if (startButtonPressed){
+			startButtonPressed = false;
+		}
+		// see if the player is attempting to shoot a weapon
 		if (Input.GetButton ("Fire1") && Time.time > nextAutoFire) {
 			fireButtonPressed = true;
 			timeBetweenBolts = 1 / shotsPerSecond;

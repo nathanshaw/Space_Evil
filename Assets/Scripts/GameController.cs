@@ -22,13 +22,14 @@ public class GameController : MonoBehaviour
 	public int firstEnemyWave;
 	public int enemyDroneCount;
 
-	// for keeping track of the score
+	/// ------------
+	/// GUI RELATED
+	/// ------------
 	// TODO turn this into upper left
 	public GUIText scoreText;
-	private int score;
 
-	public GUIText restartText;
-	public GUIText gameOverText;
+	public GUIText smallCenterText;
+	public GUIText largeCenterText;
 	// turn this into lower left notification
 	public GUIText hitPointsText;
 
@@ -50,6 +51,9 @@ public class GameController : MonoBehaviour
 	public float playerHitPoints;
 	public float playerMaxHitPoints;
 	public float playerBoltStartSpeed;
+	private int score;
+	// keeping track of game state (is it paused?)
+	private bool gamePaused;
 
 	// text
 	private bool gameOver;
@@ -59,8 +63,8 @@ public class GameController : MonoBehaviour
 	void Start () {
 		restart = false;
 		gameOver = false;
-		restartText.text = "";
-		gameOverText.text = "";
+		smallCenterText.text = "";
+		largeCenterText.text = "";
 		hitPointsText.text = "" + playerHitPoints;
 		lrNotificationText.text = "";
 		urNotificationText.text = "";
@@ -110,7 +114,7 @@ public class GameController : MonoBehaviour
 			}
 			if (gameOver) {
 					restart = true;
-					restartText.text = "Press 'R' to restart";
+					smallCenterText.text = "Press 'R' to restart";
 					break;
 			}
 		}
@@ -208,8 +212,21 @@ public class GameController : MonoBehaviour
 	}
 
 	public void GameOver () {
-		gameOverText.text = "GAME OVER";
+		largeCenterText.text = "GAME OVER";
 		gameOver = true;
+	}
+
+	public void RequestPause() { 
+		if (gamePaused == true) {
+			gamePaused = false; 
+			Time.timeScale = 1.0f;
+			largeCenterText.text = "";
+		}
+		else {
+			gamePaused = true;
+			Time.timeScale = 0.0f;
+			largeCenterText.text = "Game Paused";
+		}
 	}
 
 	public IEnumerator LowerRightNotification (string text) {
@@ -253,8 +270,8 @@ public class GameController : MonoBehaviour
 	}
 
 	void LevelCompleated () {
-		gameOverText.text = "YOU WIN!";
-		restartText.text = "Press 'R' to restart";
+		largeCenterText.text = "YOU WIN!";
+		smallCenterText.text = "Press 'R' to restart";
 		restart = true;
 	}
 
