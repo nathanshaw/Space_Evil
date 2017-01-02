@@ -87,7 +87,7 @@ public class GameController : MonoBehaviour
 	void Update ()
 	{
 		if (restart) {
-			if (Input.GetKeyDown (KeyCode.R)) {
+			if (Input.GetKeyDown (KeyCode.R) || Input.GetKey("Start")) {
 				SceneManager.LoadScene ("level_1");
 			}
 		}
