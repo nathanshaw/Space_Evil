@@ -11,6 +11,7 @@ public class DestroyByCollisionPlayerShip : MonoBehaviour {
 	public int scoreValue;
 	private GameController gameController;
 	private GameObject gameControllerObject;
+	public AudioSource commonPowerUpAudio; 
 
 	void Start () {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
@@ -25,8 +26,8 @@ public class DestroyByCollisionPlayerShip : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		// Debug.Log ("Collision player ship : ", other.tag);
 		if (other.CompareTag ("Power Up")) {
+			commonPowerUpAudio.Play ();
 			Destroy (other.gameObject);
 		}
 	}

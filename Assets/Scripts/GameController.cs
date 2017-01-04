@@ -87,7 +87,7 @@ public class GameController : MonoBehaviour
 	void Update ()
 	{
 		if (restart) {
-			if (Input.GetKeyDown (KeyCode.R) || Input.GetKey("Start")) {
+			if (Input.GetKeyDown (KeyCode.R) || Input.GetButton("Start")) {
 				SceneManager.LoadScene ("level_1");
 			}
 		}
@@ -111,6 +111,11 @@ public class GameController : MonoBehaviour
 					spawnEnemyDrone ();
 				}
 				yield return new WaitForSeconds (spawnWait);
+				if (gameOver) {
+					restart = true;
+					smallCenterText.text = "Press 'R' to restart";
+					break;
+				}
 			}
 			if (gameOver) {
 					restart = true;
