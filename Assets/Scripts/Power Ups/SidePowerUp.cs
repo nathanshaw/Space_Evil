@@ -24,6 +24,7 @@ public class SidePowerUp : MonoBehaviour {
 	{
 		if (other.CompareTag ("Player") ) {
 			gameController.PlayerSideSizeChange (sideSizeIncrease);
+			// GameController.PlayerSideDamageChange (sideDamageIncrease);
 		}
 	}
 }
