@@ -11,8 +11,8 @@ public class EnemyProperties : MonoBehaviour {
 	public bool Hit (float damage) {
 		hitPoints -= damage;
 		if (damage <= 0) {
-			return true;
 			deathAudioSource.Play ();
+			return true;
 		}
 		return false;
 	}

@@ -39,7 +39,7 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 			// Hit returns 1 if enemy has 0 or less hit points
 			enemyProperties.Hit (Damage);
 			if (enemyProperties.hitPoints <= 0) {
-				gameController.AddScore (enemyProperties.scoreValue);
+				ScoreManager.Instance.AddPoints (enemyProperties.scoreValue);
 				Destroy (other.gameObject);
 				//Debug.Log ("destroyed : " + enemyProperties.hitPoints);
 			} else {

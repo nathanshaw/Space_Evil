@@ -10,7 +10,7 @@ public class ZigZag01 : MonoBehaviour {
 	void Start () {
 		// give a starting Z coordinate
 
-		Rigidbody rigidbody = GetComponent<Rigidbody> ();
+		// Rigidbody rigidbody = GetComponent<Rigidbody> ();
 		/*
 		rigidbody.velocity = new Vector3(
 			Random.Range(xSpeedMin, xSpeedMax),
