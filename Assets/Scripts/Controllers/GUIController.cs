@@ -53,10 +53,12 @@ public class GUIController : MonoBehaviour {
 		llText.text = newText; 
 	}
 	public void SetURText (string newText){
-		urText.text = newText; 
+		UpperRightNotification( newText);
+		urText.text = newText;
 	}
 	public void SetLRText (string newText){
-		lrText.text = newText; 
+		LowerRightNotification(newText); 
+		lrText.text = newText;
 	}
 	public void SetLCText (string newText){
 		lcText.text = newText; 

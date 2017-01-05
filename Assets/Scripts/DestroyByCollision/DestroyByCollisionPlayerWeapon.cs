@@ -45,7 +45,6 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 			} else {
 				//Debug.Log ("not destroyed : " + enemyProperties.hitPoints);
 			}
-			//Debug.Log ("-----------------------");
 		}
 	}
 

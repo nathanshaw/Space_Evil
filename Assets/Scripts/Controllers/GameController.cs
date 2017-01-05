@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour 
 { 
+	public static GameController Instance;
 	// game hazards
 	public GameObject[] aestroids;
 	public GameObject[] enemyDrones;
@@ -47,7 +48,12 @@ public class GameController : MonoBehaviour
 	private bool gameOver;
 	private bool restart; 
 
+	public void Awake () {
+		Instance = this;
+	} 
+
 	void Start () {
+		//GUIController.Awake ();
 		restart = false;
 		gameOver = false;
 		ScoreManager.Instance.NewGame ();
@@ -82,7 +88,17 @@ public class GameController : MonoBehaviour
 		yield return new WaitForSeconds (startWait);
 		for (int w = 0; w < waveCount; w++) {
 			// decrease the time inbetween aestroid spawns
-			spawnRandomPowerUp ();
+			float powerUpPower = Random.Range(0.0f, 1.0f); 
+			if (powerUpPower < 0.7) {
+				Debug.Log ("spawning random power up");
+				spawnRandomPowerUp ();
+			} else if (powerUpPower < 0.9) {
+				Debug.Log ("spawning uncommon power up");
+				spawnUncommonPowerUp ();
+			} else {
+				Debug.Log ("spawning rare power up");
+				spawnRarePowerUp ();
+			}
 			spawnWait *= waveRespawnMult;
 			//ScoreManager.AddPoints (w * 1000);
 			// increase the number of hazards by the wave number we are on
@@ -112,7 +128,7 @@ public class GameController : MonoBehaviour
 			LevelCompleated ();
 		}
 	}
-	GameObject spawnRandomPowerUp () {
+	public GameObject spawnRandomPowerUp () {
 		float chance = Random.Range (0.0f, 1.0f);
 		GameObject returno;
 
@@ -124,6 +140,22 @@ public class GameController : MonoBehaviour
 		}
 		else {
 			returno = spawnRarePowerUp ();
+		}
+		return returno;
+	}
+
+	public GameObject dropRandomPowerUp (Vector3 loc) {
+		float chance = Random.Range (0.0f, 1.0f);
+		GameObject returno;
+
+		if (chance < 0.85) {
+			returno = dropCommonPowerUp (loc);
+		}
+		else if (chance < 0.98) {
+			returno = dropUncommonPowerUp (loc);
+		}
+		else {
+			returno = dropRarePowerUp (loc);
 		}
 		return returno;
 	}
@@ -154,6 +186,28 @@ public class GameController : MonoBehaviour
 		Vector3 powerUpSpawnPosition = new Vector3 (
 			spawnValues.x, spawnValues.y, Random.Range (-spawnValues.z, spawnValues.z)
 		);
+		GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
+		return powerupClone;
+	}
+
+
+	GameObject dropCommonPowerUp (Vector3 powerUpSpawnPosition) {
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject powerup = commonPowerUps [Random.Range (0, commonPowerUps.Length)];
+		GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
+		return powerupClone;
+	}
+
+	GameObject dropUncommonPowerUp (Vector3 powerUpSpawnPosition) {
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject powerup = uncommonPowerUps [Random.Range (0, uncommonPowerUps.Length)];
+		GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
+		return powerupClone;
+	}
+
+	GameObject dropRarePowerUp (Vector3 powerUpSpawnPosition) {
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject powerup = rarePowerUps [Random.Range (0, rarePowerUps.Length)];
 		GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
 		return powerupClone;
 	}
