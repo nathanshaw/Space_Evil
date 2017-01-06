@@ -14,8 +14,8 @@ public class EnemyProperties : MonoBehaviour {
 		hitPoints -= damage;
 		// Debug.Log ("Enemy Hit : " + hitPoints);
 		if (hitPoints <= 0) {
-			GameController gc = GetComponent (typeof(GameController)) as GameController;
-			float luck = Random.RandomRange (0.0f, 1.0f);
+			// GameController gc = GetComponent (typeof(GameController)) as GameController;
+			float luck = Random.Range (0.0f, 1.0f);
 			// Debug.Log ("luck : " + luck + " dc: " + dropChance);
 			if (luck < dropChance) {
 				GameController.Instance.dropRandomPowerUp (gameObject.transform.position);
