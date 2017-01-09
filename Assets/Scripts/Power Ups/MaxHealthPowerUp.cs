@@ -24,6 +24,7 @@ public class MaxHealthPowerUp : MonoBehaviour {
 	{
 		if (other.CompareTag ("Player") ) {
 			gameController.PlayerMaxHealthChange (maxHealthIncrease);
+			ScoreManager.Instance.AddPoints (scoreValue);
 		}
 	}
 }

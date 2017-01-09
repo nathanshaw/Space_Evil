@@ -31,7 +31,7 @@ public class HealthPowerUp : MonoBehaviour {
 	{
 		if (other.CompareTag ("Player") ) {
 					gameController.PlayerHealthChange (value);
+			ScoreManager.Instance.AddPoints (scoreValue);
 		}
-		Debug.Log ("healed player " + value);
 	}
 }

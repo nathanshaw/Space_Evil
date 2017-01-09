@@ -24,6 +24,7 @@ public class SpeedPowerUp : MonoBehaviour {
 	{
 		if (other.CompareTag ("Player") ) {
 			gameController.PlayerSpeedChange (speedIncrease);
+			ScoreManager.Instance.AddPoints (scoreValue);
 		}
 	}
 }

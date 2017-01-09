@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// This is a singleton class
+// to access its functions use ScoreManager._instance.Funstion()
 public class ScoreManager : MonoBehaviour {
 	private GameObject guiControllerO;
 	public static int score; 
 	//public static int highscores[10];
 	public static int highscore;
+
 	public static ScoreManager Instance;
 	// Use this for initialization 
 

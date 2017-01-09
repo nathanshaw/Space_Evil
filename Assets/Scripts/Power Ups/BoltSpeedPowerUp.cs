@@ -24,6 +24,7 @@ public class BoltSpeedPowerUp : MonoBehaviour {
 	{
 		if (other.CompareTag ("Player") ) {
 			gameController.PlayerBoltSpeedChange (boltSpeedIncrease);
+			ScoreManager.Instance.AddPoints (scoreValue);
 		}
 	}
 }

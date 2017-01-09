@@ -24,6 +24,7 @@ public class FireRatePowerUp : MonoBehaviour {
 	{
 		if (other.CompareTag ("Player") ) {
 			gameController.PlayerFireRateChange (fireRateIncrease);
+			ScoreManager.Instance.AddPoints (scoreValue);
 		}
 	}
 }

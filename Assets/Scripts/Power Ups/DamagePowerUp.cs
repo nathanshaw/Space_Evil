@@ -24,6 +24,7 @@ public class DamagePowerUp : MonoBehaviour {
 	{
 		if (other.CompareTag ("Player") ) {
 			gameController.PlayerBoltDamageChange (boltDamageChange);
+			ScoreManager.Instance.AddPoints (scoreValue);
 		}
 	}
 }

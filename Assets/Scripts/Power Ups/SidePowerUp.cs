@@ -26,6 +26,7 @@ public class SidePowerUp : MonoBehaviour {
 		if (other.CompareTag ("Player") ) {
 			gameController.PlayerSideSizeChange (sideSizeIncrease);
 			gameController.PlayerSideDamageChange (sideDamageIncrease);
+			ScoreManager.Instance.AddPoints (scoreValue);
 		}
 	}
 }

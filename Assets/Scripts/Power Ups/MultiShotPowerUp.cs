@@ -24,6 +24,7 @@ public class MultiShotPowerUp : MonoBehaviour {
 	{
 		if (other.CompareTag ("Player") ) {
 			gameController.PlayerMultiShotChange (multiShotChange);
+			ScoreManager.Instance.AddPoints (scoreValue);
 		}
 	}
 }
