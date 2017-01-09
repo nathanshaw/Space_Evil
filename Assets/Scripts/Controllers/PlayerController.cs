@@ -31,12 +31,16 @@ public class PlayerController : MonoBehaviour
 	private float manualTimeBetweenBolts;
 	public float maxHitPoints;
 	public float currentHitPoints;
-
+	// bolt gun
 	public float boltDamage;
 	public float startingBoltDamage;
 	public float maxBoltDamage;
 	public int activeBolts;
-
+	// side gun
+	public float sideGunSize;
+	public float sideGunDamage;
+	public float startingSideDamage;
+	public float maxSideDamage;
 	// to keep track of fireing
 	private float nextAutoFire;
 	private float nextManualFire;
@@ -45,8 +49,6 @@ public class PlayerController : MonoBehaviour
 
 	private AudioSource audioSource;
 
-	// side gun
-	public float sideGunSize;
 
 	void Start() {
 		audioSource = GetComponent<AudioSource> ();
@@ -143,6 +145,18 @@ public class PlayerController : MonoBehaviour
 		return updatedDamage;
 	}
 
+	public float ChangeSideDamage (float damChange) {
+		// get all the bolts and update their damage;
+		// returns the damage of the first bolt
+		float updatedDamage = 0.0f;
+		DestroyByCollisionPlayerWeapon dbcPWb = bottomSideBolt.GetComponent<DestroyByCollisionPlayerWeapon>() as DestroyByCollisionPlayerWeapon;
+		dbcPWb.updateDamage (damChange);
+		DestroyByCollisionPlayerWeapon dbcPWt = topSideBolt.GetComponent<DestroyByCollisionPlayerWeapon>() as DestroyByCollisionPlayerWeapon;
+		dbcPWt.updateDamage (damChange);
+		updatedDamage = dbcPWt.Damage;
+		return updatedDamage;
+	}
+
 	private void resetBoltDamage () {
 		for (int i = 0; i < bolts.Length; i++) {
 			DestroyByCollisionPlayerWeapon dbcPW = bolts[i].GetComponent<DestroyByCollisionPlayerWeapon>() as DestroyByCollisionPlayerWeapon;
@@ -150,5 +164,17 @@ public class PlayerController : MonoBehaviour
 			dbcPW.MaxDamage = maxBoltDamage;
 			dbcPW.StartingDamage = startingBoltDamage;
 		}
+	}
+
+	private void resetSideDamage () {
+		// get dbcpsw for top and bottom and reset their values
+	DestroyByCollisionPlayerWeapon dbcPWb = bottomSideBolt.GetComponent<DestroyByCollisionPlayerWeapon>() as DestroyByCollisionPlayerWeapon;
+			dbcPWb.Damage = startingSideDamage;
+			dbcPWb.MaxDamage = maxSideDamage;
+			dbcPWb.StartingDamage = startingSideDamage;
+	DestroyByCollisionPlayerWeapon dbcPWt = topSideBolt.GetComponent<DestroyByCollisionPlayerWeapon>() as DestroyByCollisionPlayerWeapon;
+	dbcPWt.Damage = startingSideDamage;
+	dbcPWt.MaxDamage = maxSideDamage;
+	dbcPWt.StartingDamage = startingSideDamage;
 	}
 }

@@ -8,6 +8,7 @@ public class SidePowerUp : MonoBehaviour {
 	private GameController gameController;
 	private GameObject gameControllerObject;
 	public float sideSizeIncrease;
+	public float sideDamageIncrease;
 
 	void Start () {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
@@ -24,7 +25,7 @@ public class SidePowerUp : MonoBehaviour {
 	{
 		if (other.CompareTag ("Player") ) {
 			gameController.PlayerSideSizeChange (sideSizeIncrease);
-			// GameController.PlayerSideDamageChange (sideDamageIncrease);
+			gameController.PlayerSideDamageChange (sideDamageIncrease);
 		}
 	}
 }

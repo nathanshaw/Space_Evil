@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
 	public GameObject[] commonPowerUps;
 	public GameObject[] uncommonPowerUps;
 	public GameObject[] rarePowerUps;
+	public GameObject healthPowerUp;
 	 
 	// spawning
 	public Vector3 spawnValues;
@@ -189,7 +190,12 @@ public class GameController : MonoBehaviour
 		GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
 		return powerupClone;
 	}
-
+		
+	public GameObject dropHealth (Vector3 powerUpSpawnPosition) {
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject powerupClone = Instantiate (healthPowerUp, powerUpSpawnPosition, spawnRotation) as GameObject;
+		return powerupClone;
+	}
 
 	GameObject dropCommonPowerUp (Vector3 powerUpSpawnPosition) {
 		Quaternion spawnRotation = Quaternion.identity;
@@ -301,6 +307,16 @@ public class GameController : MonoBehaviour
 		}
 		pc.sideGunSize += sideSizeChange;
 		GUIController.Instance.SetLRText("Side Size : " + pc.sideGunSize);
+		return pc.speed;
+	}
+
+	public float PlayerSideDamageChange (float sideDamageChange) {
+		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
+		if (pc == null) {
+			Debug.Log ("cannt find player controller from Game controller");
+		}
+		pc.sideGunDamage += sideDamageChange;
+		GUIController.Instance.SetLRText("Side Damage : " + pc.sideGunDamage);
 		return pc.speed;
 	}
 
