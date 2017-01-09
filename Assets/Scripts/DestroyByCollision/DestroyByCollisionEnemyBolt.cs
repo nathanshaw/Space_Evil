@@ -22,7 +22,6 @@ public class DestroyByCollisionEnemyBolt : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
 		if (other.tag == "Player") {

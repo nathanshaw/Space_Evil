@@ -11,10 +11,9 @@ public class WeaponController : MonoBehaviour {
 	public float fireRateRandomRange;
 	private float halfRange;
 
-	private AudioSource audioSource;
+	public AudioSource fireWeaponAudioSource;
 
 	void Start() {
-		audioSource = GetComponent<AudioSource> ();
 		halfRange = fireRateRandomRange * 0.5f;
 		InvokeRepeating (
 			"Fire", 
@@ -31,6 +30,6 @@ public class WeaponController : MonoBehaviour {
 			shotSpawn.transform.position, 
 			shotSpawn.transform.rotation
 		);
-		audioSource.Play ();
+		fireWeaponAudioSource.Play ();
 	}
 }

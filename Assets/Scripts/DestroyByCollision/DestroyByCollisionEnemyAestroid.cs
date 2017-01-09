@@ -22,21 +22,12 @@ public class DestroyByCollisionEnemyAestroid : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
 		if (other.CompareTag ("Player")) {
-			// if the hit does enough damage...
 			Instantiate (explosion, transform.position, transform.rotation);
 			gameController.PlayerHit (damage);
 			Destroy (gameObject);
 		} 
-		// for some reason the bolt destroy by collision does not work
-		/*
-		else if (other.CompareTag ("Player Weapon")) {
-			Instantiate (explosion, transform.position, transform.rotation);
-			Destroy (gameObject);
-		}
-		*/
 	}
 }

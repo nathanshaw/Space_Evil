@@ -26,15 +26,9 @@ public class DestroyByCollisionEnemyDrone : MonoBehaviour {
 	void OnTriggerEnter(Collider other) 
 	{
 		if (other.tag == "Player") {
-			// if the hit does enough damage...
 			Instantiate (explosion, transform.position, transform.rotation);
 			Destroy (gameObject);
 			gameController.PlayerHit (damage);
 		}
-		// for some reason the bolt destroy by collision does not work
-		// else if (other.CompareTag ("Player Weapon")) {
-		//nstantiate (explosion, transform.position, transform.rotation);
-		//Destroy (gameObject);
-		//}
 	}
 }
