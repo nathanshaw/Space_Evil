@@ -10,27 +10,27 @@ public class EnemyProperties : MonoBehaviour {
 	public float healthDropChance; 
 
 	public AudioSource deathAudioSource;
+	public GameObject deathExplosion;
 
 	public bool Hit (float damage) {
-		
 		hitPoints -= damage;
 		// Debug.Log ("Enemy Hit : " + hitPoints);
 		if (hitPoints <= 0) {
-			// GameController gc = GetComponent (typeof(GameController)) as GameController;
 			float luck = Random.Range (0.0f, 1.0f);
-			// Debug.Log ("luck : " + luck + " dc: " + dropChance);
 			if (luck < dropChance) {
 				GameController.Instance.dropRandomPowerUp (gameObject.transform.position);
-				Debug.Log ("Dropping PU from enemy kill");
 			} else {
 				luck = Random.Range (0.0f, 1.0f); 
 				if (luck < healthDropChance) {
 					GameController.Instance.dropHealth (gameObject.transform.position);
-					Debug.Log ("Dropping health from enemy kill");
 				} 
 			}
+			Debug.Log ("enemy properties calling death audio clip");
 			deathAudioSource.Play ();
 			ScoreManager.Instance.AddPoints (scoreValue);
+			if (deathExplosion != null) {
+				Instantiate (deathExplosion, transform.position, transform.rotation);
+			}
 			Destroy (gameObject);
 			return true;
 		}

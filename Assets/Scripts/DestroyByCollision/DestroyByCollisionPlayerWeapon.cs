@@ -34,7 +34,6 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 			Instantiate (explosion, transform.position, transform.rotation);
 			// add the value of enemy to the total score
 			enemyProperties = other.gameObject.GetComponent<EnemyProperties>();
-			//Debug.Log ("enemy properties : " + enemyProperties.hitPoints);
 			Destroy (gameObject);
 			enemyProperties.Hit (Damage);
 		}

@@ -20,8 +20,7 @@ public class EnemyFire : MonoBehaviour {
 			Debug.Log ("Cannot find 'GameController' script");
 		}
 	}
-
-	// Use this for initialization
+		
 	void OnTriggerEnter(Collider other) 
 	{
 		if (other.CompareTag ("Boundary")) {
@@ -32,7 +31,6 @@ public class EnemyFire : MonoBehaviour {
 			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
 			gameController.GameOver ();
 		}
-		//gameController.AddScore (scoreValue);
 		Destroy (other.gameObject);
 		Destroy (gameObject);
 	}

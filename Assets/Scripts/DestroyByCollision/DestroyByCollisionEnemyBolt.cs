@@ -26,7 +26,6 @@ public class DestroyByCollisionEnemyBolt : MonoBehaviour {
 	{
 		if (other.tag == "Player") {
 			gameController.PlayerHit (damage);
-			// if the hit does enough damage...
 			Instantiate (explosion, transform.position, transform.rotation);
 			Destroy (gameObject);
 		}
