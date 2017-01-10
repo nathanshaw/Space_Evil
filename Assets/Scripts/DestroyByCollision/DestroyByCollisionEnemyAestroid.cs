@@ -24,7 +24,7 @@ public class DestroyByCollisionEnemyAestroid : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.CompareTag ("Player")) {
+		if (other.tag == "PlayerOne" || other.tag == "PlayerTwo") {
 			Instantiate (explosion, transform.position, transform.rotation);
 			gameController.PlayerHit (damage);
 			Destroy (gameObject);

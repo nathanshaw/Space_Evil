@@ -15,7 +15,8 @@ public class GameController : MonoBehaviour
 	public GameObject[] uncommonPowerUps;
 	public GameObject[] rarePowerUps;
 	public GameObject healthPowerUp;
-	 
+	public GameObject[] bosses; 
+
 	// spawning
 	public Vector3 spawnValues;
 	public int hazardCount;
@@ -28,6 +29,7 @@ public class GameController : MonoBehaviour
 	public float aestroidMaxSize;
 	public int firstEnemyWave;
 	public int enemyDroneCount;
+	public int bossFrequency;
 
 	// GUI Controller
 	// public static GUIController GUIController; 
@@ -88,27 +90,30 @@ public class GameController : MonoBehaviour
 	IEnumerator SpawnWaves() {
 		yield return new WaitForSeconds (startWait);
 		for (int w = 0; w < waveCount; w++) {
+			// this needs to change to w instead of wavecount TODO
+			if (w % bossFrequency == 0 && w != 0 && bossFrequency > 0) {
+				spawnBoss ((w - bossFrequency) / bossFrequency);
+			} else {
+				Debug.Log ("Not spawning boss, mod was : " + (w % bossFrequency));
+			}
 			// decrease the time inbetween aestroid spawns
 			float powerUpPower = Random.Range(0.0f, 1.0f); 
 			if (powerUpPower < 0.7) {
-				Debug.Log ("spawning random power up");
 				spawnRandomPowerUp ();
 			} else if (powerUpPower < 0.9) {
-				Debug.Log ("spawning uncommon power up");
 				spawnUncommonPowerUp ();
 			} else {
-				Debug.Log ("spawning rare power up");
 				spawnRarePowerUp ();
 			}
 			spawnWait *= waveRespawnMult;
-			//ScoreManager.AddPoints (w * 1000);
+
 			// increase the number of hazards by the wave number we are on
 			hazardCount += w;
 			GUIController.Instance.SetURText("Wave : " + w);
 			yield return new WaitForSeconds (waveWait);
 			for (int i = 0; i < hazardCount; i++) {
 				spawnRandomAestroid ();
-				if (waveCount >= firstEnemyWave) {
+				if (w >= firstEnemyWave) {
 					enemyDroneCount++;
 					spawnEnemyDrone ();
 				}
@@ -218,6 +223,30 @@ public class GameController : MonoBehaviour
 		return powerupClone;
 	}
 
+	GameObject spawnBoss (int bossNum) { 
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject boss;
+		if (bossNum < bosses.Length) {
+			boss = bosses [bossNum];
+			Debug.Log ("Spawning boss " + bossNum);
+		} else {
+			boss = bosses [bosses.Length - 1];
+			Debug.Log ("Spawning boss " + (bosses.Length - 1));
+		}
+		//Quaternion bossSpawnRotation = Quaternion.AngleAxis(270, Vector3.up);
+		Quaternion bossSpawnRotation = Quaternion.identity;
+		Vector3 bossSpawnPosition = new Vector3 (
+			spawnValues.x, spawnValues.y, 
+			Random.Range (-spawnValues.z, spawnValues.z)
+		);
+		GameObject bossClone = Instantiate (boss, 
+			bossSpawnPosition, bossSpawnRotation) as GameObject;
+		Vector3 targetAngle = bossClone.transform.eulerAngles + Vector3.up;
+		bossClone.transform.eulerAngles = new Vector3(
+			0.0f, 90.0f, 0.0f);
+		return bossClone;
+	}
+
 	GameObject spawnEnemyDrone () { 
 		Quaternion spawnRotation = Quaternion.identity;
 		GameObject enemyDrone = enemyDrones [Random.Range (0, enemyDrones.Length)];
@@ -228,8 +257,9 @@ public class GameController : MonoBehaviour
 		);
 		GameObject droneClone = Instantiate (enemyDrone, 
 			droneSpawnPosition, droneSpawnRotation) as GameObject;
-		// hack to get them facing the right way
-		droneClone.transform.RotateAround(droneClone.transform.position, droneClone.transform.up, Time.deltaTime * 180.0f);
+		Vector3 targetAngle = droneClone.transform.eulerAngles + Vector3.up;
+		droneClone.transform.eulerAngles = new Vector3(
+			0.0f, 90.0f, 0.0f);
 		return droneClone;
 	}
 

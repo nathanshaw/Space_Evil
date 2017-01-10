@@ -25,7 +25,7 @@ public class DestroyByCollisionEnemyDrone : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.tag == "Player") {
+		if (other.tag == "PlayerOne" || other.tag == "PlayerTwo") {
 			Instantiate (explosion, transform.position, transform.rotation);
 			Destroy (gameObject);
 			gameController.PlayerHit (damage);

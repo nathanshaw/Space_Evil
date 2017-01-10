@@ -24,7 +24,7 @@ public class DestroyByCollisionEnemyBolt : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.tag == "Player") {
+		if (other.tag == "PlayerOne" || other.tag == "PlayerTwo") {
 			gameController.PlayerHit (damage);
 			Instantiate (explosion, transform.position, transform.rotation);
 			Destroy (gameObject);
