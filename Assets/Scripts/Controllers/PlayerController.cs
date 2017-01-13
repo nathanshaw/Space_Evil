@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
 	public float maxHitPoints;
 	public float currentHitPoints;
 
+	private float healthPercent;
+
 	// bolt gun
 	public float boltDamage;
 	public float startingBoltDamage;
@@ -229,12 +231,13 @@ public class PlayerController : MonoBehaviour
 		UpdateHealthBar ();
 		// Debug.Log ("Player Took Damage, Current Hit Points : " + playerHitPoints);
 		if (currentHitPoints <= 0) {
+			currentHitPoints = 0;
 			gc.PlayerKilled (playerID);
 			Destroy (gameObject);
 			Instantiate (playerDeathExplosion, 
 				transform.position, 
 				transform.rotation);
-			GUIController.Instance.SetLLText("0");
+			UpdateHealthBar ();
 			return 1;
 		}
 		return 0;
@@ -326,6 +329,11 @@ public class PlayerController : MonoBehaviour
 			GUIController.Instance.UpdateUpperHealthBar (normalizedScale);
 			return;
 		}
+		healthPercent = normalizedScale * 100;
 		GUIController.Instance.UpdateLowerHealthBar (normalizedScale);
 		}
+
+	public float GetHealthPercent () {
+		return healthPercent;
+	}
 }

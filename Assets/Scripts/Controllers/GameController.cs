@@ -204,9 +204,14 @@ public class GameController : MonoBehaviour
 	}
 		
 	public GameObject dropHealth (Vector3 powerUpSpawnPosition) {
-		Quaternion spawnRotation = Quaternion.identity;
-		GameObject powerupClone = Instantiate (healthPowerUp, powerUpSpawnPosition, spawnRotation) as GameObject;
-		return powerupClone;
+		foreach (PlayerController pc in playerControllers) {
+			if (pc.GetHealthPercent () < 100.0) {
+				Quaternion spawnRotation = Quaternion.identity;
+				GameObject powerupClone = Instantiate (healthPowerUp, powerUpSpawnPosition, spawnRotation) as GameObject;
+				return powerupClone;
+			}
+		}
+			return null;
 	}
 
 	GameObject dropCommonPowerUp (Vector3 powerUpSpawnPosition) {
@@ -266,7 +271,7 @@ public class GameController : MonoBehaviour
 			droneSpawnPosition, droneSpawnRotation) as GameObject;
 		//Vector3 targetAngle = droneClone.transform.eulerAngles + Vector3.up;
 		droneClone.transform.eulerAngles = new Vector3(
-			0.0f, 90.0f, 0.0f);
+			0.0f, 270.0f, 0.0f);
 		return droneClone;
 	}
 
