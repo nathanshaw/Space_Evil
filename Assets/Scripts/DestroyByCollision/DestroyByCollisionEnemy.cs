@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DestroyByCollisionEnemyAestroid : MonoBehaviour {
+public class DestroyByCollisionEnemy : MonoBehaviour {
 
 	public GameObject explosion;
 	public GameObject playerExplosion;
@@ -24,10 +24,15 @@ public class DestroyByCollisionEnemyAestroid : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.tag == "PlayerOne" || other.tag == "PlayerTwo") {
+		if (other.tag == "PlayerOne") {
 			Instantiate (explosion, transform.position, transform.rotation);
-			gameController.PlayerHit (damage);
+			gameController.playerControllers [0].PlayerHit (damage);
 			Destroy (gameObject);
+		}
+		else if (other.tag == "PlayerTwo"){
+			Instantiate (explosion, transform.position, transform.rotation);
+			gameController.playerControllers [1].PlayerHit (damage);
+			Destroy (gameObject);	
 		} 
 	}
 }

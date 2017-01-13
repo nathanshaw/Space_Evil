@@ -5,8 +5,7 @@ using UnityEngine;
 // This is a singleton class
 // to access its functions use ScoreManager._instance.Funstion()
 public class ScoreManager : MonoBehaviour {
-	private GameObject guiControllerO;
-	public static int score; 
+	public static int[] scores = new int[] {0,0,0,0}; 
 	//public static int highscores[10];
 	public static int highscore;
 
@@ -21,27 +20,30 @@ public class ScoreManager : MonoBehaviour {
 		highscore = PlayerPrefs.GetInt ("highscore", highscore);
 		GUIController.Instance.Awake();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void UpdateHighScore () {
 		// intsted only check if thiss is true when player dies
-		if (score > highscore) { 
-			highscore = score; 
-			PlayerPrefs.SetInt ("highscore", highscore);
+		foreach (int score in scores) {
+			if (score > highscore) { 
+				highscore = score; 
+				PlayerPrefs.SetInt ("highscore", highscore);
+			}
 		}
 	}
 
-	public void AddPoints(int pointsToAdd) {
-		score += pointsToAdd; 
-		GUIController.Instance.SetULText ("" + score);
+	public void AddPoints(int playerIndex, int pointsToAdd) {
+		scores[playerIndex] += pointsToAdd; 
+		GUIController.Instance.SetULText ("" + playerIndex + ": " + scores[playerIndex]);
 	}
 
 	public void NewGame() {
-			score = 0;
+		for (int i = 0; i < scores.Length; i++) {
+			scores [i] = 0;
+		}
 	} 
 
-	public int GetScore () {
-		return score;
+	public int GetScore (int playerID) {
+		return scores[playerID];
 	} 
 }
 

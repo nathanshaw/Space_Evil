@@ -19,13 +19,16 @@ public class GUIController : MonoBehaviour {
 	// upper center
 	public GUIText ucText; 
 	// health bar
-	public GameObject healthBar; 
+	public GameObject upperHealthBar;
+	public GameObject lowerHealthBar;
 
 	bool lrNotificationBeingDisplayed;
 	bool urNotificationBeingDisplayed;
+	bool ccNotificationBeingDisplayed;
 
 	public float lrNotificationWaitTime;
 	public float urNotificationWaitTime;
+	public float ccNotificationWaitTime;
 
 	void Start () {
 		string newText = "";
@@ -53,43 +56,61 @@ public class GUIController : MonoBehaviour {
 		llText.text = newText; 
 	}
 	public void SetURText (string newText){
-		UpperRightNotification( newText);
-		urText.text = newText;
+		StartCoroutine(UpperRightNotification(newText));
 	}
 	public void SetLRText (string newText){
-		LowerRightNotification(newText); 
-		lrText.text = newText;
+		StartCoroutine(LowerRightNotification(newText)); 
 	}
 	public void SetLCText (string newText){
 		lcText.text = newText; 
 	}
 	public void SetCCText (string newText){
-		ccText.text = newText; 
+		StartCoroutine(CenterCenterNotification (newText));
 	}
 	public void SetUCText (string newText){
 		ucText.text = newText; 
 	}
 
-	public void UpdateHealthBar(float size) {
-		healthBar.transform.localScale = new Vector3(
+	public void UpdateUpperHealthBar(float size) {
+		upperHealthBar.transform.localScale = new Vector3(
 			size * 10, 
-			healthBar.transform.localScale.y, 
-			healthBar.transform.localScale.z
+			upperHealthBar.transform.localScale.y, 
+			upperHealthBar.transform.localScale.z
 		);
 
 		// set the healthbar color
 		if (size > 0.5) {
-			healthBar.GetComponent<Renderer> ().material.color = Color.green;
+			upperHealthBar.GetComponent<Renderer> ().material.color = Color.green;
 		} 
 		else if (size > 0.25f) {
-			healthBar.GetComponent<Renderer> ().material.color = Color.yellow;
+			upperHealthBar.GetComponent<Renderer> ().material.color = Color.yellow;
 		} 
 		else {
-			healthBar.GetComponent<Renderer> ().material.color = Color.red;
+			upperHealthBar.GetComponent<Renderer> ().material.color = Color.red;
 		}
 	}
 
-	public IEnumerator LowerRightNotification (string text) {
+
+	public void UpdateLowerHealthBar(float size) {
+		lowerHealthBar.transform.localScale = new Vector3(
+			size * 10, 
+			lowerHealthBar.transform.localScale.y, 
+			lowerHealthBar.transform.localScale.z
+		);
+
+		// set the healthbar color
+		if (size > 0.5) {
+			lowerHealthBar.GetComponent<Renderer> ().material.color = Color.green;
+		} 
+		else if (size > 0.25f) {
+			lowerHealthBar.GetComponent<Renderer> ().material.color = Color.yellow;
+		} 
+		else {
+			lowerHealthBar.GetComponent<Renderer> ().material.color = Color.red;
+		}
+	}
+
+	private IEnumerator LowerRightNotification (string text) {
 		if (lrNotificationBeingDisplayed == false) {
 			lrNotificationBeingDisplayed = true;
 			lrText.text = text;
@@ -109,7 +130,7 @@ public class GUIController : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator UpperRightNotification (string text) {
+	private IEnumerator UpperRightNotification (string text) {
 		if (urNotificationBeingDisplayed == false) {
 			urNotificationBeingDisplayed = true;
 			urText.text = text;
@@ -126,6 +147,32 @@ public class GUIController : MonoBehaviour {
 			yield return new WaitForSeconds (urNotificationWaitTime * 0.6f);
 			urText.text = "";
 			urNotificationBeingDisplayed = false;
+		}
+	}
+
+
+	private IEnumerator CenterCenterNotification (string text) {
+		if (ccNotificationBeingDisplayed == false) {
+			ccNotificationBeingDisplayed = true;
+			ccText.text = text;
+			Debug.Log ("started waiting for " + text);
+			yield return new WaitForSeconds (ccNotificationWaitTime);
+			Debug.Log ("done waiting for " + text);
+			ccText.text = "";
+			ccNotificationBeingDisplayed = false;
+			// wait 4 seconds then remove text
+		} else {
+			while (ccNotificationBeingDisplayed == true) {
+				Debug.Log ("waiting for .3 seconds");
+				yield return new WaitForSeconds (0.3f);
+			}
+			ccNotificationBeingDisplayed = true;
+			ccText.text = text;
+			Debug.Log ("started waiting for " + text);
+			yield return new WaitForSeconds (ccNotificationWaitTime);
+			Debug.Log ("done waiting for " + text);
+			ccText.text = "";
+			ccNotificationBeingDisplayed = false;
 		}
 	}
 

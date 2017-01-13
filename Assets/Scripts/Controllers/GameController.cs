@@ -31,19 +31,14 @@ public class GameController : MonoBehaviour
 	public int enemyDroneCount;
 	public int bossFrequency;
 
-	// GUI Controller
-	// public static GUIController GUIController; 
-	// scoreManager 
-	//public ScoreManager scoreManager;
-
 	// Player object
-	public GameObject player;
+	public PlayerController[] playerControllers;
+	// 0 = player is dead 
+	// 1 = player is alive and well
+	// 2 = plater is invulnerable TODO
+	private int[] playerStates = new int[] {0,0};
 	public GameObject playerExplosion;
 
-	// player states
-	public float playerHitPoints;
-	public float playerMaxHitPoints;
-	public float playerBoltStartSpeed;
  	// keeping track of game state (is it paused?)
 	private bool gamePaused;
 
@@ -56,20 +51,21 @@ public class GameController : MonoBehaviour
 	} 
 
 	void Start () {
-		//GUIController.Awake ();
 		restart = false;
 		gameOver = false;
+		playerStates[0] = 1;
+		playerStates[1] = 1;
 		ScoreManager.Instance.NewGame ();
 		StartCoroutine (SpawnWaves ());
-		updateHealthBar ();
+
+		foreach (PlayerController player in playerControllers) {
+			
 		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
 		if (pc == null) {
 			Debug.Log ("cannt find player controller from Game controller");
 		}
-		for (int i = 0; i < pc.bolts.Length; i++) {
-			Mover boltMover = pc.bolts [i].GetComponent<Mover> ();
-			boltMover.xSpeedMax = playerBoltStartSpeed;
-			boltMover.xSpeedMin = playerBoltStartSpeed;
+			pc.ResetWeapons ();
+			pc.UpdateHealthBar ();
 		}
 	}
 
@@ -82,6 +78,17 @@ public class GameController : MonoBehaviour
 		}
 	}
 
+	public void PlayerKilled (int whatPlayer) {
+		playerStates [whatPlayer] = 0; 
+		foreach (int state in playerStates) {
+			// if there is still a player alive exit method
+			if (state > 0) {
+				return;
+			}
+		} 
+		GameOver ();
+	}
+
 	public void GameOver () {
 		GUIController.Instance.SetLCText ("Game Over");
 		gameOver = true;
@@ -89,7 +96,7 @@ public class GameController : MonoBehaviour
 
 	IEnumerator SpawnWaves() {
 		yield return new WaitForSeconds (startWait);
-		for (int w = 0; w < waveCount; w++) {
+		for (int w = 1; w < waveCount; w++) {
 			// this needs to change to w instead of wavecount TODO
 			if (w % bossFrequency == 0 && w != 0 && bossFrequency > 0) {
 				spawnBoss ((w - bossFrequency) / bossFrequency);
@@ -108,8 +115,8 @@ public class GameController : MonoBehaviour
 			spawnWait *= waveRespawnMult;
 
 			// increase the number of hazards by the wave number we are on
-			hazardCount += w;
-			GUIController.Instance.SetURText("Wave : " + w);
+			hazardCount += (w *3);
+			GUIController.Instance.SetLCText ("Wave : " + w);
 			yield return new WaitForSeconds (waveWait);
 			for (int i = 0; i < hazardCount; i++) {
 				spawnRandomAestroid ();
@@ -241,7 +248,7 @@ public class GameController : MonoBehaviour
 		);
 		GameObject bossClone = Instantiate (boss, 
 			bossSpawnPosition, bossSpawnRotation) as GameObject;
-		Vector3 targetAngle = bossClone.transform.eulerAngles + Vector3.up;
+		//Vector3 targetAngle = bossClone.transform.eulerAngles + Vector3.up;
 		bossClone.transform.eulerAngles = new Vector3(
 			0.0f, 90.0f, 0.0f);
 		return bossClone;
@@ -257,7 +264,7 @@ public class GameController : MonoBehaviour
 		);
 		GameObject droneClone = Instantiate (enemyDrone, 
 			droneSpawnPosition, droneSpawnRotation) as GameObject;
-		Vector3 targetAngle = droneClone.transform.eulerAngles + Vector3.up;
+		//Vector3 targetAngle = droneClone.transform.eulerAngles + Vector3.up;
 		droneClone.transform.eulerAngles = new Vector3(
 			0.0f, 90.0f, 0.0f);
 		return droneClone;
@@ -280,34 +287,12 @@ public class GameController : MonoBehaviour
 		return aestroidClone;
 	}
 		
-	public int PlayerHit(float damage) {
-		playerHitPoints -= damage;
-		updateHealthBar ();
-		// Debug.Log ("Player Took Damage, Current Hit Points : " + playerHitPoints);
-		if (playerHitPoints < 0 || playerHitPoints == 0) {
-			GameOver ();
-			Destroy (player);
-			Instantiate (playerExplosion, 
-						 player.transform.position, 
-						 player.transform.rotation);
-			GUIController.Instance.SetLLText("0");
-			return 1;
-		}
-		return 0;
-	}
-
-	void updateHealthBar() {
-		float normalizedScale = playerHitPoints / playerMaxHitPoints;
-		GUIController.Instance.UpdateHealthBar (normalizedScale);
-	}
-		
 	public void RequestPause() { 
 		if (gamePaused == true) {
 			gamePaused = false; 
 			Time.timeScale = 1.0f;
 			GUIController.Instance.SetLCText ("");
-		}
-		else {
+		}else {
 			gamePaused = true;
 			Time.timeScale = 0.0f;
 			GUIController.Instance.SetLCText ("Game Paused");
@@ -320,106 +305,4 @@ public class GameController : MonoBehaviour
 		restart = true;
 	}
 
-	public float PlayerSpeedChange (float speedChange) {
-		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
-		if (pc == null) {
-			Debug.Log ("cannt find player controller from Game controller");
-		}
-		pc.speed += speedChange;
-		GUIController.Instance.SetLRText("Speed : " + pc.speed);
-		return pc.speed;
-	}
-
-	public float PlayerSideSizeChange (float sideSizeChange) {
-		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
-		if (pc == null) {
-			Debug.Log ("cannt find player controller from Game controller");
-		}
-		pc.sideGunSize += sideSizeChange;
-		GUIController.Instance.SetLRText("Side Size : " + pc.sideGunSize);
-		return pc.speed;
-	}
-
-	public float PlayerSideDamageChange (float sideDamageChange) {
-		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
-		if (pc == null) {
-			Debug.Log ("cannt find player controller from Game controller");
-		}
-		pc.sideGunDamage += sideDamageChange;
-		GUIController.Instance.SetLRText("Side Damage : " + pc.sideGunDamage);
-		return pc.speed;
-	}
-
-	public float PlayerBoltSpeedChange (float boltSpeedChange) {
-		// get all the bolt objects from player controller 
-		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
-		if (pc == null) {
-			Debug.Log ("cannt find player controller from Game controller");
-		}
-		for (int i = 0; i < pc.bolts.Length; i++) {
-			Mover boltMover = pc.bolts [i].GetComponent<Mover> ();
-			boltMover.xSpeedMax += boltSpeedChange;
-			boltMover.xSpeedMin += boltSpeedChange;
-			Debug.Log("boltMover xspeed changed to : " + boltMover.xSpeedMax);
-		}
-		GUIController.Instance.SetLRText("Bolt Speed change : " + boltSpeedChange);
-		return boltSpeedChange;
-	}
-
-	public float PlayerMultiShotChange (int multiShotChange) {
-		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
-		if (pc == null) {
-			Debug.Log ("cannt find player controller from Game controller");
-		}
-		pc.activeBolts += multiShotChange;
-		if (pc.activeBolts < 0) {
-			pc.activeBolts = 0;
-		} else if (pc.activeBolts > pc.bolts.Length) {
-			pc.activeBolts = pc.bolts.Length;
-		}
-		GUIController.Instance.SetLRText("MultiShot : " + pc.activeBolts);
-		return pc.activeBolts;
-	}
-
-	public float PlayerHealthChange (float healthChange) {
-		// TODO move all player info to player controller
-		playerHitPoints += healthChange;
-		if (playerHitPoints > playerMaxHitPoints) {
-			playerHitPoints = playerMaxHitPoints;
-		}
-		updateHealthBar ();
-		GUIController.Instance.SetLRText("HP : " + playerHitPoints);
-		return playerHitPoints;
-	}
-
-	public float PlayerMaxHealthChange (float maxHealthChange) {
-		// TODO move all player info to player controller
-		playerMaxHitPoints += maxHealthChange;
-		playerHitPoints += maxHealthChange;
-		if (playerMaxHitPoints < 50) {
-			playerMaxHitPoints = 50;
-		}
-		updateHealthBar ();
-		GUIController.Instance.SetLRText("Max HP : " + playerMaxHitPoints);
-		return playerHitPoints;
-	}
-
-	public float PlayerFireRateChange (float fireRateChange) {
-		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
-		if (pc == null) {
-			Debug.Log ("cannt find player controller from Game controller");
-		}
-		pc.shotsPerSecond += fireRateChange;
-		GUIController.Instance.SetLRText("Fire Rate : " + pc.shotsPerSecond);
-		return pc.shotsPerSecond;
-	}
-
-	public void PlayerBoltDamageChange (float boltDamageChange) {
-		PlayerController pc = player.GetComponent (typeof(PlayerController)) as PlayerController;
-		if (pc == null) {
-			Debug.Log ("cannt find player controller from Game controller");
-		}
-		float boltDamage = pc.ChangeBoltDamage(boltDamageChange);
-		GUIController.Instance.SetLRText("Bolt Damage : " + boltDamage);
-	}
 }

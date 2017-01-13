@@ -23,10 +23,15 @@ public class SidePowerUp : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.CompareTag ("Player") ) {
-			gameController.PlayerSideSizeChange (sideSizeIncrease);
-			gameController.PlayerSideDamageChange (sideDamageIncrease);
-			ScoreManager.Instance.AddPoints (scoreValue);
+		if (other.CompareTag ("PlayerOne") ){
+			gameController.playerControllers[0].SideSizeChange (sideSizeIncrease);
+			gameController.playerControllers[0].SideDamageChange (sideDamageIncrease);
+			ScoreManager.Instance.AddPoints (0, scoreValue);
+		} 
+		else if (other.CompareTag ("PlayerTwo") ){
+			gameController.playerControllers[1].SideSizeChange (sideSizeIncrease);
+			gameController.playerControllers[1].SideDamageChange (sideDamageIncrease);
+			ScoreManager.Instance.AddPoints (1, scoreValue);
 		}
 	}
 }

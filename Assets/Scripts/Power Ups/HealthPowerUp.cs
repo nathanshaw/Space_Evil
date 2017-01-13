@@ -29,9 +29,13 @@ public class HealthPowerUp : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.CompareTag ("Player") ) {
-					gameController.PlayerHealthChange (value);
-			ScoreManager.Instance.AddPoints (scoreValue);
+		if (other.CompareTag ("PlayerOne") ){
+			gameController.playerControllers[0].HealthChange  (value);
+			ScoreManager.Instance.AddPoints (0, scoreValue);
+		} 
+		else if (other.CompareTag ("PlayerTwo") ){
+			gameController.playerControllers[1].HealthChange (value);
+			ScoreManager.Instance.AddPoints (1, scoreValue);
 		}
 	}
 }

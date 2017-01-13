@@ -6,24 +6,24 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 
 	public GameObject explosion;
 	public GameObject playerExplosion;
-	public float Damage;
-	public float StartingDamage;
-	public float MaxDamage;
+	public WeaponProperties weaponProperties;
+
 
 	private GameController gameController;
 	private GameObject gameControllerObject;
 	private EnemyProperties enemyProperties;
+	private int sourcePlayerID;
 
 	void Start () {
 		gameControllerObject = GameObject.FindWithTag ("GameController");
 		// set damage to starting damage at start
-		Damage = StartingDamage;
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent<GameController>();
 		}
 		if (gameController == null) {
 			Debug.Log ("Cannot find 'GameController' script");
 		}
+		sourcePlayerID = weaponProperties.sourcePlayerID;
 	}
 
 	// Use this for initialization
@@ -35,18 +35,7 @@ public class DestroyByCollisionPlayerWeapon : MonoBehaviour {
 			// add the value of enemy to the total score
 			enemyProperties = other.gameObject.GetComponent<EnemyProperties>();
 			Destroy (gameObject);
-			enemyProperties.Hit (Damage);
-		}
-	}
-
-	public void updateDamage (float change) {
-		Debug.Log ("Damage : " + Damage);
-		Damage += change;
-		Debug.Log ("Changed to : " + Damage);
-		if (Damage < 1) {
-			Damage = 1;
-		} else if (Damage > MaxDamage) {
-			Damage = MaxDamage;
+			enemyProperties.Hit (sourcePlayerID, weaponProperties.damage);
 		}
 	}
 }

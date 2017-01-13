@@ -22,9 +22,13 @@ public class FireRatePowerUp : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.CompareTag ("Player") ) {
-			gameController.PlayerFireRateChange (fireRateIncrease);
-			ScoreManager.Instance.AddPoints (scoreValue);
+		if (other.CompareTag ("PlayerOne") ){
+			gameController.playerControllers[0].FireRateChange (fireRateIncrease);
+			ScoreManager.Instance.AddPoints (0, scoreValue);
+		} 
+		else if (other.CompareTag ("PlayerTwo") ){
+			gameController.playerControllers[1].FireRateChange (fireRateIncrease);
+			ScoreManager.Instance.AddPoints (1, scoreValue);
 		}
 	}
 }

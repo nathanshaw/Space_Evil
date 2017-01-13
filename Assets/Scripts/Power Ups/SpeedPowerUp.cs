@@ -22,9 +22,13 @@ public class SpeedPowerUp : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.CompareTag ("Player") ) {
-			gameController.PlayerSpeedChange (speedIncrease);
-			ScoreManager.Instance.AddPoints (scoreValue);
+		if (other.CompareTag ("PlayerOne") ){
+			gameController.playerControllers[0].SpeedChange (speedIncrease);
+			ScoreManager.Instance.AddPoints (0, scoreValue);
+		} 
+		else if (other.CompareTag ("PlayerTwo") ){
+			gameController.playerControllers[1].SpeedChange (speedIncrease);
+			ScoreManager.Instance.AddPoints (1, scoreValue);
 		}
 	}
 }

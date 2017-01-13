@@ -22,9 +22,13 @@ public class BoltSpeedPowerUp : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.CompareTag ("Player") ) {
-			gameController.PlayerBoltSpeedChange (boltSpeedIncrease);
-			ScoreManager.Instance.AddPoints (scoreValue);
+		if (other.CompareTag ("PlayerOne")) {
+			gameController.playerControllers[0].BoltSpeedChange (boltSpeedIncrease);
+			ScoreManager.Instance.AddPoints (0, scoreValue);
+		} 
+		else if (other.CompareTag ("PlayerTwo")) {
+			gameController.playerControllers[1].BoltSpeedChange (boltSpeedIncrease);
+			ScoreManager.Instance.AddPoints (1, scoreValue);
 		}
 	}
 }

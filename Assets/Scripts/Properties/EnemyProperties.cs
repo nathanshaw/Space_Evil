@@ -6,13 +6,14 @@ public class EnemyProperties : MonoBehaviour {
 
 	public float hitPoints;
 	public int scoreValue;
+
 	public float dropChance;
 	public float healthDropChance; 
 
 	public AudioSource deathAudioSource;
 	public GameObject deathExplosion;
 
-	public bool Hit (float damage) {
+	public bool Hit (int sourcePlayerID, float damage) {
 		hitPoints -= damage;
 		if (hitPoints <= 0) {
 			float luck = Random.Range (0.0f, 1.0f);
@@ -25,7 +26,7 @@ public class EnemyProperties : MonoBehaviour {
 				} 
 			}
 			deathAudioSource.Play ();
-			ScoreManager.Instance.AddPoints (scoreValue);
+			ScoreManager.Instance.AddPoints (sourcePlayerID, scoreValue);
 			if (deathExplosion != null) {
 				Instantiate (deathExplosion, transform.position, transform.rotation);
 			}

@@ -22,9 +22,13 @@ public class MaxHealthPowerUp : MonoBehaviour {
 	// Use this for initialization
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.CompareTag ("Player") ) {
-			gameController.PlayerMaxHealthChange (maxHealthIncrease);
-			ScoreManager.Instance.AddPoints (scoreValue);
+		if (other.CompareTag ("PlayerOne") ){
+			gameController.playerControllers[0].MaxHealthChange (maxHealthIncrease);
+			ScoreManager.Instance.AddPoints (0, scoreValue);
+		} 
+		else if (other.CompareTag ("PlayerTwo") ){
+			gameController.playerControllers[1].MaxHealthChange (maxHealthIncrease);
+			ScoreManager.Instance.AddPoints (1, scoreValue);
 		}
 	}
 }
