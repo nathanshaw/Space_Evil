@@ -32,13 +32,20 @@ public class ScoreManager : MonoBehaviour {
 	}
 
 	public void AddPoints(int playerIndex, int pointsToAdd) {
-		scores[playerIndex] += pointsToAdd; 
-		GUIController.Instance.SetULText ("" + playerIndex + ": " + scores[playerIndex]);
+		scores [playerIndex] += pointsToAdd; 
+		if (playerIndex == 0) {
+			GUIController.Instance.SetULText ("" + scores [playerIndex]);
+		} else if (playerIndex == 1) {
+			GUIController.Instance.SetLLText ("" + scores [playerIndex]);
+		}
+	
 	}
 
 	public void NewGame() {
 		for (int i = 0; i < scores.Length; i++) {
 			scores [i] = 0;
+			GUIController.Instance.SetLLText ("0");
+			GUIController.Instance.SetULText ("0");
 		}
 	} 
 

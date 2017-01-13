@@ -116,7 +116,7 @@ public class GameController : MonoBehaviour
 
 			// increase the number of hazards by the wave number we are on
 			hazardCount += (w *3);
-			GUIController.Instance.SetLCText ("Wave : " + w);
+			GUIController.Instance.SetCCText ("Wave : " + w);
 			yield return new WaitForSeconds (waveWait);
 			for (int i = 0; i < hazardCount; i++) {
 				spawnRandomAestroid ();
