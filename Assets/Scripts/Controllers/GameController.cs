@@ -172,8 +172,8 @@ public class GameController : MonoBehaviour
 		}
 		return returno;
 	}
-
-	GameObject spawnCommonPowerUp () {
+	// The spawn functions are for powerups that are not dropped
+	public GameObject spawnCommonPowerUp () {
 		Quaternion spawnRotation = Quaternion.identity;
 		GameObject powerup = commonPowerUps [Random.Range (0, commonPowerUps.Length)];
 		Vector3 powerUpSpawnPosition = new Vector3 (
@@ -183,7 +183,7 @@ public class GameController : MonoBehaviour
 		return powerupClone;
 	}
 
-	GameObject spawnUncommonPowerUp () {
+	public GameObject spawnUncommonPowerUp () {
 		Quaternion spawnRotation = Quaternion.identity;
 		GameObject powerup = uncommonPowerUps [Random.Range (0, uncommonPowerUps.Length)];
 		Vector3 powerUpSpawnPosition = new Vector3 (
@@ -193,7 +193,7 @@ public class GameController : MonoBehaviour
 		return powerupClone;
 	}
 
-	GameObject spawnRarePowerUp () {
+	public GameObject spawnRarePowerUp () {
 		Quaternion spawnRotation = Quaternion.identity;
 		GameObject powerup = rarePowerUps [Random.Range (0, rarePowerUps.Length)];
 		Vector3 powerUpSpawnPosition = new Vector3 (
@@ -203,6 +203,30 @@ public class GameController : MonoBehaviour
 		return powerupClone;
 	}
 		
+	public GameObject dropCommonPowerUp (GameObject dropper) {
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject powerup = commonPowerUps [Random.Range (0, commonPowerUps.Length)];
+		Vector3 powerUpSpawnPosition = dropper.transform.position;
+		GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
+		return powerupClone;
+	}
+
+	public GameObject dropUncommonPowerUp (GameObject dropper) {
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject powerup = uncommonPowerUps [Random.Range (0, uncommonPowerUps.Length)];
+		Vector3 powerUpSpawnPosition = dropper.transform.position;
+		GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
+		return powerupClone;
+	}
+
+	public GameObject dropRarePowerUp (GameObject dropper) {
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject powerup = rarePowerUps [Random.Range (0, rarePowerUps.Length)];
+		Vector3 powerUpSpawnPosition = dropper.transform.position;
+		GameObject powerupClone = Instantiate (powerup, powerUpSpawnPosition, spawnRotation) as GameObject;
+		return powerupClone;
+	}
+
 	public GameObject dropHealth (Vector3 powerUpSpawnPosition) {
 		foreach (PlayerController pc in playerControllers) {
 			if (pc.GetHealthPercent () < 100.0) {
