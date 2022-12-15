@@ -2,28 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponProperties : MonoBehaviour {
-	 
+public class PlayerProperties {
+	public PlayerMovement movementController;
+	public PlayerShip ship;
+	public string name;
+	public int score;
+	// for keeping track of players where there is more than one?
+};
 
-	public float xSpeed;
-	public float ySpeed;
+public class PlayerOne : PlayerProperties {
+	private int player_ID = 1;
+}
 
-	public GameObject Explosion;
-
-	public int sourcePlayerID;
-
-	public float minDamage;
-	public float maxDamage;
-	public float damage;
-
-	public float UpdateDamage ( float damDelta ) {
-		damage += damDelta;
-		if (damage < minDamage) {
-			damage = minDamage;
-		} else if (damage > maxDamage) {
-			damage = maxDamage;
-		}
-		return damage;
-	}
-
+public class PlayerTwo: PlayerProperties {
+	private int player_ID = 2;
 }

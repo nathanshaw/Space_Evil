@@ -41,8 +41,7 @@ public class GameController : MonoBehaviour
 
  	// keeping track of game state (is it paused?)
 	private bool gamePaused;
-
-	// state
+	// has the player lost?
 	private bool gameOver;
 	private bool restart; 
 
@@ -51,12 +50,16 @@ public class GameController : MonoBehaviour
 	} 
 
 	void Start () {
+		startWait = 5;
 		restart = false;
 		gameOver = false;
+		// TODO - change this depending on if the user selects
 		playerStates[0] = 1;
 		playerStates[1] = 1;
+		// keep track of the player's score
 		ScoreManager.Instance.NewGame ();
-		StartCoroutine (SpawnWaves ());
+		// begin the level by spawning waves...
+		StartCoroutine (SpawnWaves());
 
 		foreach (PlayerController player in playerControllers) {
 			
@@ -90,13 +93,15 @@ public class GameController : MonoBehaviour
 	}
 
 	public void GameOver () {
-		GUIController.Instance.SetLCText ("Game Over");
+		GUIController.Instance.SetCCText ("Game Over");
 		gameOver = true;
 	}
 
 	IEnumerator SpawnWaves() {
+		GUIController.Instance.SetCCText("Get Ready!");
 		yield return new WaitForSeconds (startWait);
 		for (int w = 1; w < waveCount; w++) {
+            GUIController.Instance.SetLCText("Wave #" + (char)w);
 			// this needs to change to w instead of wavecount TODO
 			if (w % bossFrequency == 0 && w != 0 && bossFrequency > 0) {
 				spawnBoss ((w - bossFrequency) / bossFrequency);
@@ -116,7 +121,7 @@ public class GameController : MonoBehaviour
 
 			// increase the number of hazards by the wave number we are on
 			hazardCount += (w *3);
-			GUIController.Instance.SetCCText ("Wave : " + w);
+			GUIController.Instance.SetCCText ("Wave : " + (char)w);
 			yield return new WaitForSeconds (waveWait);
 			for (int i = 0; i < hazardCount; i++) {
 				spawnRandomAestroid ();
@@ -141,6 +146,7 @@ public class GameController : MonoBehaviour
 			LevelCompleated ();
 		}
 	}
+	
 	public GameObject spawnRandomPowerUp () {
 		float chance = Random.Range (0.0f, 1.0f);
 		GameObject returno;

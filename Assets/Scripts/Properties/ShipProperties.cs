@@ -2,28 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponProperties : MonoBehaviour {
+// 
+public class PlayerShip {
 	 
+	 // calculated by added together the hull and weapons and weapon attachments
+	 public int Mass;
+	 public int MoveSpeed = 10;
 
-	public float xSpeed;
-	public float ySpeed;
+	 ShipHull Hull;
 
+
+    // not sure what this does
 	public GameObject Explosion;
 
+	// back reference to the player...
 	public int sourcePlayerID;
-
-	public float minDamage;
-	public float maxDamage;
-	public float damage;
-
-	public float UpdateDamage ( float damDelta ) {
-		damage += damDelta;
-		if (damage < minDamage) {
-			damage = minDamage;
-		} else if (damage > maxDamage) {
-			damage = maxDamage;
-		}
-		return damage;
-	}
 
 }

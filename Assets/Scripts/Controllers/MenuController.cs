@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class MenuController : MonoBehaviour {
 
+	// hmm, the name and score are now saved by the PlayerManager?
 	string name="";
 	string score="";
 	List<Scores> highscore;
@@ -11,9 +12,7 @@ public class MenuController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//EventManager._instance._buttonClick += ButtonClicked;
-
 		highscore = new List<Scores>();
-
 	}
 
 

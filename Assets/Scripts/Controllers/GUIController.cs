@@ -1,44 +1,50 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GUIController : MonoBehaviour {
 	public static GUIController Instance;
 	// upper left
-	public GUIText ulText;
+	public Text ulText;
 	// lower left
-	public GUIText llText;
+	public Text llText;
 	// upper right
-	public GUIText urText;
+	public Text urText;
 	// lower right
-	public GUIText lrText;
+	public Text lrText;
 	// center center
-	public GUIText ccText; 
+	public Text ccText; 
 	// lower center
-	public GUIText lcText;
+	public Text lcText;
 	// upper center
-	public GUIText ucText; 
+	public Text ucText; 
 	// health bar
 	public GameObject upperHealthBar;
 	public GameObject lowerHealthBar;
 
+	// is there text currently being displayed?
 	bool lrNotificationBeingDisplayed;
 	bool urNotificationBeingDisplayed;
 	bool ccNotificationBeingDisplayed;
 
-	public float lrNotificationWaitTime;
-	public float urNotificationWaitTime;
-	public float ccNotificationWaitTime;
+	// how long should notifications last for?
+	public float notificationPeriodShort;
+	public float notificationPeriodMedium;
+	public float notificationPeriodLong;
 
 	void Start () {
+		// set the text in each of my possible locations to nothing
 		string newText = "";
-		ulText.text = newText; 
-		llText.text = newText; 
-		urText.text = newText; 
-		lrText.text = newText; 
+		ulText.text = newText;
+        llText.text = newText;
+        urText.text = newText;
+        lrText.text = newText; 
 		lcText.text = newText; 
 		ccText.text = newText; 
-		ucText.text = newText; 
+		ucText.text = newText;
+		notificationPeriodShort = 2.0f;
+		notificationPeriodMedium = 5.0f;
+		notificationPeriodLong = 10.0f;
 	}
 
 	void Update () {
@@ -62,8 +68,8 @@ public class GUIController : MonoBehaviour {
 		StartCoroutine(LowerRightNotification(newText)); 
 	}
 	public void SetLCText (string newText){
-		lcText.text = newText; 
-	}
+        lcText.text = newText;
+    }
 	public void SetCCText (string newText){
 		StartCoroutine(CenterCenterNotification (newText));
 	}
@@ -90,7 +96,6 @@ public class GUIController : MonoBehaviour {
 		}
 	}
 
-
 	public void UpdateLowerHealthBar(float size) {
 		lowerHealthBar.transform.localScale = new Vector3(
 			size * 10, 
@@ -114,7 +119,7 @@ public class GUIController : MonoBehaviour {
 		if (lrNotificationBeingDisplayed == false) {
 			lrNotificationBeingDisplayed = true;
 			lrText.text = text;
-			yield return new WaitForSeconds (lrNotificationWaitTime);
+			yield return new WaitForSeconds (notificationPeriodShort);
 			lrText.text = "";
 			lrNotificationBeingDisplayed = false;
 			// wait 4 seconds then remove text
@@ -124,7 +129,7 @@ public class GUIController : MonoBehaviour {
 			}
 			lrNotificationBeingDisplayed = true;
 			lrText.text = text;
-			yield return new WaitForSeconds (lrNotificationWaitTime * 0.6f);
+			yield return new WaitForSeconds (notificationPeriodShort * 0.6f);
 			lrText.text = "";
 			lrNotificationBeingDisplayed = false;
 		}
@@ -134,7 +139,7 @@ public class GUIController : MonoBehaviour {
 		if (urNotificationBeingDisplayed == false) {
 			urNotificationBeingDisplayed = true;
 			urText.text = text;
-			yield return new WaitForSeconds (urNotificationWaitTime);
+			yield return new WaitForSeconds (notificationPeriodShort);
 			urText.text = "";
 			urNotificationBeingDisplayed = false;
 			// wait 4 seconds then remove text
@@ -144,19 +149,18 @@ public class GUIController : MonoBehaviour {
 			}
 			urNotificationBeingDisplayed = true;
 			urText.text = text;
-			yield return new WaitForSeconds (urNotificationWaitTime * 0.6f);
+			yield return new WaitForSeconds (notificationPeriodShort * 0.6f);
 			urText.text = "";
 			urNotificationBeingDisplayed = false;
 		}
 	}
-
 
 	private IEnumerator CenterCenterNotification (string text) {
 		if (ccNotificationBeingDisplayed == false) {
 			ccNotificationBeingDisplayed = true;
 			ccText.text = text;
 			Debug.Log ("started waiting for " + text);
-			yield return new WaitForSeconds (ccNotificationWaitTime);
+			yield return new WaitForSeconds (notificationPeriodMedium);
 			Debug.Log ("done waiting for " + text);
 			ccText.text = "";
 			ccNotificationBeingDisplayed = false;
@@ -169,11 +173,10 @@ public class GUIController : MonoBehaviour {
 			ccNotificationBeingDisplayed = true;
 			ccText.text = text;
 			Debug.Log ("started waiting for " + text);
-			yield return new WaitForSeconds (ccNotificationWaitTime);
+			yield return new WaitForSeconds (notificationPeriodMedium);
 			Debug.Log ("done waiting for " + text);
 			ccText.text = "";
 			ccNotificationBeingDisplayed = false;
 		}
 	}
-
 }

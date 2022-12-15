@@ -1,0 +1,36 @@
+﻿<Properties StartupConfiguration="{2425F3C5-89CE-807C-3B00-B68567FB2656}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Properties/EnemyProperties.cs">
+    <Files>
+      <File FileName="Assets/Scripts/Properties/ShipProperties.cs" Line="5" Column="1" />
+      <File FileName="Assets/Scripts/Controllers/PlayerController.cs" />
+      <File FileName="Assets/LoadSceneOnClick.cs" />
+      <File FileName="Assets/Scripts/Controllers/GUIController.cs" />
+      <File FileName="Assets/Scripts/Controllers/WeaponController.cs" />
+      <File FileName="Assets/Scripts/Controllers/GameController.cs" />
+      <File FileName="Assets/Scripts/Properties/EnemyProperties.cs" Line="12" Column="25" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Space_Evil" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="Controllers" expanded="True" />
+                <Node name="Properties" expanded="True">
+                  <Node name="ShipProperties.cs" selected="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="d77bc8e1-4412-4a5f-b315-19e1504c5bbb" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

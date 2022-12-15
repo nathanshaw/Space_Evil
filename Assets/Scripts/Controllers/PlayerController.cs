@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [System.Serializable]
 public class Boundary
@@ -56,8 +57,8 @@ public class PlayerController : MonoBehaviour
 	public float sideSpeed;
 
 	// to keep track of fireing
-	private float nextAutoFire;
-	private float nextManualFire;
+	private double nextAutoFire;
+	private double nextManualFire;
 	private bool fireButtonPressed;
 	private bool startButtonPressed;
 
@@ -68,17 +69,28 @@ public class PlayerController : MonoBehaviour
 	private string verticalString;
 	private string horizontalString;
 
+	// to keep track of moving
+	private float moveHorizontal;
+	private float moveVertical;
+
 	void Start ()
 	{
+		// map the gampad to the player
+		for (var i = 0; i < Gamepad.all.Count; i++)
+        {
+			Debug.Log(Gamepad.all[i].name);
+        };
+
 		ResetBoltDamage ();
 		playerPrefix = "P" + (playerID + 1) + " ";
 		Debug.Log ("player prefix : " + playerPrefix);
 		verticalString = playerPrefix + "Vertical";
 		horizontalString = playerPrefix + "Horizontal";
 		fire1String = playerPrefix + "Fire1";
+		// TODO - need to add bomb attack
 	}
 
-	//code that is run for every frame
+	//code that is run for every frame, best for capturing user inputs
 	void Update ()
 	{
 		// see if the game has been paused
@@ -90,9 +102,19 @@ public class PlayerController : MonoBehaviour
 		} else if (startButtonPressed) {
 			startButtonPressed = false;
 		}
-		// see if the player is attempting to shoot a weapon
-		if (Input.GetButton (fire1String) && Time.time > nextAutoFire) {
-			fireButtonPressed = true;
+
+		// TODO - the netAutoFire timer should be reset when the player releases their fire input
+		// check for manual firing as denoted by ButtonDown
+		if (Input.GetButtonDown(fire1String) && Time.time > nextManualFire)
+        {
+			nextManualFire = Time.time + (timeBetweenBolts * 0.5);
+			for (int i = 0; i < activeBolts; i++)
+			{
+				Instantiate(bolts[i], boltSpawns[i].position, boltSpawns[i].rotation);
+			}
+		}
+		// check to see if the fire button is being held down (using AutoFire)
+		else if (Input.GetButton (fire1String) && Time.time > nextAutoFire) {
 			timeBetweenBolts = 1 / shotsPerSecond;
 			// bolts
 			nextAutoFire = Time.time + timeBetweenBolts;
@@ -101,20 +123,10 @@ public class PlayerController : MonoBehaviour
 			}
 			weaponFireAudioSource.Play ();
 			// side gun
-			if (sideGunSize > 0) {
-				GameObject topBolt = Instantiate (topSideBolt, topSideSpawn.position, topSideSpawn.rotation) as GameObject;  
-				GameObject bottomBolt = Instantiate (bottomSideBolt, bottomSideSpawn.position, bottomSideSpawn.rotation) as GameObject;
-				// TODO, make it so the side bolts can have their sizes changed...
-				Vector3 scale = new Vector3 (1.0f, 1.0f, sideGunSize);
-				topBolt.transform.localScale = scale;
-				bottomBolt.transform.localScale = scale;
-			}
-		} else if (Input.GetButton (fire1String) == false) {
-			fireButtonPressed = false;
-		} else if (fireButtonPressed == false &&
+			fireSideGuns();
+		} else if (
 			Input.GetButton (fire1String) &&
 		           Time.time > nextManualFire) {
-			fireButtonPressed = true;
 			timeBetweenBolts = 1 / shotsPerSecond;
 			manualTimeBetweenBolts = 1 / (shotsPerSecond * 2);
 			nextAutoFire = Time.time + timeBetweenBolts;
@@ -124,25 +136,29 @@ public class PlayerController : MonoBehaviour
 			}
 			weaponFireAudioSource.Play ();
 			// side gun
-			if (sideGunSize > 0) {
-				GameObject topBolt = Instantiate (topSideBolt, topSideSpawn.position, topSideSpawn.rotation) as GameObject;  
-				GameObject bottomBolt = Instantiate (bottomSideBolt, bottomSideSpawn.position, bottomSideSpawn.rotation) as GameObject;
-				// TODO, make it so the side bolts can have their sizes changed...
-				Vector3 scale = new Vector3 (1.0f, 1.0f, sideGunSize);
-				topBolt.transform.localScale = scale;
-				bottomBolt.transform.localScale = scale;
-			}
-		} else if (Input.GetButton (fire1String)) {
-			fireButtonPressed = true;
+			fireSideGuns();
+		}
+	}
+
+	void fireSideGuns()
+    {
+		if (sideGunSize > 0)
+		{
+			GameObject topBolt = Instantiate(topSideBolt, topSideSpawn.position, topSideSpawn.rotation) as GameObject;
+			GameObject bottomBolt = Instantiate(bottomSideBolt, bottomSideSpawn.position, bottomSideSpawn.rotation) as GameObject;
+			// TODO, make it so the side bolts can have their sizes changed...
+			Vector3 scale = new Vector3(1.0f, 1.0f, sideGunSize);
+			topBolt.transform.localScale = scale;
+			bottomBolt.transform.localScale = scale;
 		}
 	}
 
 	// executed once per physics step
 	void FixedUpdate ()
 	{
+		/////////////// Check for Collisions ////////////////////////////////
 		Rigidbody rigidbody = GetComponent<Rigidbody> ();
-		float moveHorizontal = Input.GetAxis (horizontalString);
-		float moveVertical = Input.GetAxis (verticalString);
+		
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical); 
 		rigidbody.velocity = movement * movementSpeed;
 		rigidbody.position = new Vector3 (
@@ -151,9 +167,12 @@ public class PlayerController : MonoBehaviour
 			Mathf.Clamp (rigidbody.position.z, boundary.zMin, boundary.zMax)
 		);
 		rigidbody.rotation = Quaternion.Euler (rigidbody.velocity.x * hTilt, 90, rigidbody.velocity.z * vTilt);
-	}
+		/////////////// Execute Player Movements ////////////////////////////
+		moveHorizontal = Input.GetAxis(horizontalString);
+		moveVertical = Input.GetAxis(verticalString);
+		}
 
-	public float ChangeBoltDamage (float damChange)
+	float ChangeBoltDamage (float damChange)
 	{
 		// get all the bolts and update their damage;
 		// returns the damage of the first bolt
@@ -168,7 +187,7 @@ public class PlayerController : MonoBehaviour
 		return updatedDamage;
 	}
 
-	public float ChangeSideDamage (float damChange)
+	float ChangeSideDamage (float damChange)
 	{
 		// get all the bolts and update their damage;
 		// returns the damage of the first bolt
