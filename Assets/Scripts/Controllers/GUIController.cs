@@ -1,28 +1,29 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GUIController : MonoBehaviour {
 	public static GUIController Instance;
 	// upper left
-	public Text ulText;
+	public TMP_Text ulText;
 	// lower left
-	public Text llText;
+	public TMP_Text llText;
 	// upper right
-	public Text urText;
+	public TMP_Text urText;
 	// lower right
-	public Text lrText;
+	public TMP_Text lrText;
 	// center center
-	public Text ccText; 
+	public TMP_Text ccText; 
 	// lower center
-	public Text lcText;
+	// public TMP_Text lcText;
 	// upper center
-	public Text ucText; 
+	// public TMP_Text ucText; 
 	// health bar
 	public GameObject upperHealthBar;
 	public GameObject lowerHealthBar;
 
-	// is there text currently being displayed?
+	// is there TMP_Text currently being displayed?
 	bool lrNotificationBeingDisplayed;
 	bool urNotificationBeingDisplayed;
 	bool ccNotificationBeingDisplayed;
@@ -39,9 +40,7 @@ public class GUIController : MonoBehaviour {
         llText.text = newText;
         urText.text = newText;
         lrText.text = newText; 
-		lcText.text = newText; 
 		ccText.text = newText; 
-		ucText.text = newText;
 		notificationPeriodShort = 2.0f;
 		notificationPeriodMedium = 5.0f;
 		notificationPeriodLong = 10.0f;
@@ -67,14 +66,8 @@ public class GUIController : MonoBehaviour {
 	public void SetLRText (string newText){
 		StartCoroutine(LowerRightNotification(newText)); 
 	}
-	public void SetLCText (string newText){
-        lcText.text = newText;
-    }
 	public void SetCCText (string newText){
 		StartCoroutine(CenterCenterNotification (newText));
-	}
-	public void SetUCText (string newText){
-		ucText.text = newText; 
 	}
 
 	public void UpdateUpperHealthBar(float size) {

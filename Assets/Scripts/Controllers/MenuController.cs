@@ -1,74 +1,119 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using TMPro;
 
-public class MenuController : MonoBehaviour {
+public class MenuController : MonoBehaviour
+{
+    public AudioListener master;
+    public AudioListener sfx;
+    public AudioListener music;
 
-	// hmm, the name and score are now saved by the PlayerManager?
-	string name="";
-	string score="";
-	List<Scores> highscore;
+    // Allows the User to Choose what Level to Load...
+    // [Header("Levels to Load")]
+    // public string _newGameLevel;
+    // private string levelToLoad;
 
-	// Use this for initialization
-	void Start () {
-		//EventManager._instance._buttonClick += ButtonClicked;
-		highscore = new List<Scores>();
-	}
+    [Header("Gameplay")]
+    public int perm_death;
 
+    [Header("Audio")]
+    [SerializeField] private TMP_Text MasterVolumeTextValue = null;
+    [SerializeField] private Slider MasterVolumeSlider = null;
+    [SerializeField] private float MasterVolume;
 
-	void ButtonClicked(GameObject _obj)
-	{
-		print("Clicked button:"+_obj.name);
-	}
+    [SerializeField] private TMP_Text SFXVolumeTextValue = null;
+    [SerializeField] private Slider SFXVolumeSlider = null;
+    [SerializeField] private float SFXVolume = 0.8f;
 
-	// Update is called once per frame
-	void Update () {
+    [SerializeField] private TMP_Text MusicVolumeTextValue = null;
+    [SerializeField] private Slider MusicVolumeSlider = null;
+    [SerializeField] private float MusicVolume = 0.8f;
 
-	}
+    // initalise player settings from the PlayerPref's class =)
+    public void Start() {
+        perm_death = PlayerPrefs.GetInt("PermDeath", 0);
+        MasterVolume = PlayerPrefs.GetFloat("MasterVolume", 0.8f);
+        MusicVolume = PlayerPrefs.GetFloat("SFXVolume", 0.8f);
+        SFXVolume = PlayerPrefs.GetFloat("MusicVolume", 0.8f);
+    }
 
-	void OnGUI()
-	{
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Name :");
-		name =  GUILayout.TextField(name);
-		GUILayout.EndHorizontal();
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////// Gameplay Section ///////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    public void ApplyGameplayOptions()
+    {
+        // TODO - also add setting for difficulty?
+        ApplyPermDeath();
+        PlayerPrefs.Save();
+        Debug.Log("set permDeath to " + perm_death + PlayerPrefs.GetInt("PermDeath"));
+    }
+    public void SetPermDeath(int val)
+    {
+        perm_death = val;
+    }
+    private void ApplyPermDeath()
+    {
+        PlayerPrefs.SetInt("PermDeath", perm_death);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////// Gameplay Section ///////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    public void ApplyAudioSettings()
+    {
+        ApplyMasterVolume();
+        ApplyMusicVolume();
+        ApplySFXVolume();
+        PlayerPrefs.Save();
+        Debug.Log("Master Volume applied at " +  PlayerPrefs.GetFloat("MasterVolume"));
+        Debug.Log("Music Volume applied at " +  PlayerPrefs.GetFloat("MusicVolume"));
+        Debug.Log("SFX Volume applied at" + PlayerPrefs.GetFloat("SFXVolume"));
+    }
+    public void SetMasterVolume()
+    {
+        Debug.Log("Master Volume should be set to" + MasterVolumeSlider.value);
+        MasterVolume = MasterVolumeSlider.value;
+        MasterVolumeTextValue.text = MasterVolume.ToString("0.00");
+        master.Volume
+        Debug.Log("Master Volume set to" + MasterVolume);
+    }
 
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Score :");
-		score =  GUILayout.TextField(score);
-		GUILayout.EndHorizontal();
+    public void SetSFXVolume(float vol)
+    {
+        SFXVolume = vol;
+        SFXVolumeTextValue.text = vol.ToString();
+        Debug.Log("SFX Volume set to" + SFXVolume);
+    }
+    public void SetMusicVolume(float vol)
+    {
+        MusicVolume = vol;
+        MusicVolumeTextValue.text = vol.ToString("0.00");
+    }
 
-		if(GUILayout.Button("Add Score"))
-		{
-			HighScoreManager._instance.SaveHighScore(name,System.Int32.Parse(score));
-			highscore = HighScoreManager._instance.GetHighScore();    
-		}
+    private void ApplyMasterVolume()
+    {
+        PlayerPrefs.SetFloat("MasterVolume", MasterVolume);
+    }
+    private void ApplyMusicVolume()
+    {
+        PlayerPrefs.SetFloat("MusicVolume", MusicVolume);
+    }
+    private void ApplySFXVolume()
+    {
+        PlayerPrefs.SetFloat("SFXVolume", SFXVolume);
+    }
 
-		if(GUILayout.Button("Get LeaderBoard"))
-		{
-			highscore = HighScoreManager._instance.GetHighScore();            
-		}
+    // TODO - load saved game
+    public void LoadSavedGame()
+    {
+        if (PlayerPrefs.HasKey("SavedGame"))
+        {
+            // TODO - do something to load the saved data...
+        }
 
-		if(GUILayout.Button("Clear Leaderboard"))
-		{
-			HighScoreManager._instance.ClearLeaderBoard();            
-		}
+    }
 
-		GUILayout.Space(60);
-
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Name",GUILayout.Width(Screen.width/2));
-		GUILayout.Label("Scores",GUILayout.Width(Screen.width/2));
-		GUILayout.EndHorizontal();
-
-		GUILayout.Space(25);
-
-		foreach(Scores _score in highscore)
-		{
-			GUILayout.BeginHorizontal();
-			GUILayout.Label(_score.name,GUILayout.Width(Screen.width/2));
-			GUILayout.Label(""+_score.score,GUILayout.Width(Screen.width/2));
-			GUILayout.EndHorizontal();
-		}
-	}
 }
+

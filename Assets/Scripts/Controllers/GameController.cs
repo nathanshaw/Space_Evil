@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour 
 { 
 	public static GameController Instance;
+
+	public ScoreManager scoreManager;
+
+	public GUIController guiController;
 	// game hazards
 	public GameObject[] aestroids;
 	public GameObject[] enemyDrones;
@@ -39,6 +43,7 @@ public class GameController : MonoBehaviour
 	private int[] playerStates = new int[] {0,0};
 	public GameObject playerExplosion;
 
+	// keeping track of scores during level (score should be transfered to players after level complete)
  	// keeping track of game state (is it paused?)
 	private bool gamePaused;
 	// has the player lost?
@@ -47,6 +52,7 @@ public class GameController : MonoBehaviour
 
 	public void Awake () {
 		Instance = this;
+		scoreManager.Awake();
 	} 
 
 	void Start () {
@@ -55,9 +61,11 @@ public class GameController : MonoBehaviour
 		gameOver = false;
 		// TODO - change this depending on if the user selects
 		playerStates[0] = 1;
-		playerStates[1] = 1;
+		if (PlayerPrefs.GetInt("numPlayers") > 1) {
+			playerStates[1] = 1;
+		}
 		// keep track of the player's score
-		ScoreManager.Instance.NewGame ();
+		scoreManager.NewGame();
 		// begin the level by spawning waves...
 		StartCoroutine (SpawnWaves());
 
@@ -98,10 +106,10 @@ public class GameController : MonoBehaviour
 	}
 
 	IEnumerator SpawnWaves() {
-		GUIController.Instance.SetCCText("Get Ready!");
+		guiController.SetCCText("Get Ready!");
 		yield return new WaitForSeconds (startWait);
 		for (int w = 1; w < waveCount; w++) {
-            GUIController.Instance.SetLCText("Wave #" + (char)w);
+            guiController.SetCCText("Wave #" + w);
 			// this needs to change to w instead of wavecount TODO
 			if (w % bossFrequency == 0 && w != 0 && bossFrequency > 0) {
 				spawnBoss ((w - bossFrequency) / bossFrequency);
@@ -121,7 +129,6 @@ public class GameController : MonoBehaviour
 
 			// increase the number of hazards by the wave number we are on
 			hazardCount += (w *3);
-			GUIController.Instance.SetCCText ("Wave : " + (char)w);
 			yield return new WaitForSeconds (waveWait);
 			for (int i = 0; i < hazardCount; i++) {
 				spawnRandomAestroid ();
@@ -132,13 +139,13 @@ public class GameController : MonoBehaviour
 				yield return new WaitForSeconds (spawnWait);
 				if (gameOver) {
 					restart = true;
-					GUIController.Instance.SetCCText ("Press 'R' to restart");
+					guiController.SetCCText ("Press 'R' to restart");
 					break;
 				}
 			}
 			if (gameOver) {
 					restart = true;
-				GUIController.Instance.SetCCText("Press 'R' to restart");
+				guiController.SetCCText("Press 'R' to restart");
 					break;
 			}
 		}
@@ -326,17 +333,19 @@ public class GameController : MonoBehaviour
 		if (gamePaused == true) {
 			gamePaused = false; 
 			Time.timeScale = 1.0f;
-			GUIController.Instance.SetLCText ("");
+			guiController.SetCCText ("");
 		}else {
 			gamePaused = true;
 			Time.timeScale = 0.0f;
-			GUIController.Instance.SetLCText ("Game Paused");
+			guiController.SetCCText ("Game Paused");
 		}
 	}
 
 	void LevelCompleated () { 
-		GUIController.Instance.SetLCText ("YOU WIN!");
-		GUIController.Instance.SetCCText ("Press 'R' to restart");
+		// TODO - move on to the ShipUpgrade Scene, 
+		// TODO - move points to the player controllers
+		guiController.SetCCText ("YOU WIN!");
+		guiController.SetCCText ("Press 'R' to restart");
 		restart = true;
 	}
 

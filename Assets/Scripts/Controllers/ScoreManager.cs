@@ -4,53 +4,79 @@ using UnityEngine;
 
 // This is a singleton class
 // to access its functions use ScoreManager._instance.Funstion()
-public class ScoreManager : MonoBehaviour {
-	public static int[] scores = new int[] {0,0,0,0}; 
-	//public static int highscores[10];
-	public static int highscore;
+public class ScoreManager : MonoBehaviour
+{
+    public PlayerOne player1Properties;
+    public PlayerTwo player2Properties;
+    //public static int highscores[10];
+    public static int highscore;
 
-	public static ScoreManager Instance;
-	// Use this for initialization 
+    public static ScoreManager Instance;
+    public GUIController guiController;
+    // Use this for initialization 
 
-	public void Awake () {
-		Instance = this;
-	} 
+    public void Awake()
+    {
+        Instance = this;
+    }
 
-	void Start () {
-		highscore = PlayerPrefs.GetInt ("highscore", highscore);
-		GUIController.Instance.Awake();
+    void Start()
+    {
+        highscore = PlayerPrefs.GetInt("highscore", highscore);
+        guiController.Awake();
+        // player1Properties.Awake();
+        // player2Properties.Awake();
+        player1Properties.Start();
+        player2Properties.Start();
+    }
+
+    void UpdateHighScore()
+    {
+        // intsted only check if thiss is true when player dies
+        if (player1Properties.score > highscore)
+        {
+            highscore = player1Properties.score;
+            PlayerPrefs.SetInt("highscore", highscore);
+            PlayerPrefs.Save();
+        }
+        if (player2Properties.score > highscore)
+        {
+            highscore = player2Properties.score;
+            PlayerPrefs.SetInt("highscore", highscore);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public void AddPoints(int playerIndex, int pointsToAdd)
+    {
+		if (playerIndex == 1) {
+        	player1Properties.score += pointsToAdd;
+        	guiController.SetULText("" + player1Properties.score);
+        }
+        else if (playerIndex == 2)
+        {
+        	player2Properties.score += pointsToAdd;
+            guiController.SetLLText("" + player2Properties.score);
+        }
 	}
 
-	void UpdateHighScore () {
-		// intsted only check if thiss is true when player dies
-		foreach (int score in scores) {
-			if (score > highscore) { 
-				highscore = score; 
-				PlayerPrefs.SetInt ("highscore", highscore);
-			}
-		}
-	}
+    public void NewGame()
+    {
+		player1Properties.score = 0;
+		guiController.SetLLText("0");
+		player2Properties.score = 0;
+		guiController.SetULText("0");
+    }
 
-	public void AddPoints(int playerIndex, int pointsToAdd) {
-		scores [playerIndex] += pointsToAdd; 
-		if (playerIndex == 0) {
-			GUIController.Instance.SetULText ("" + scores [playerIndex]);
-		} else if (playerIndex == 1) {
-			GUIController.Instance.SetLLText ("" + scores [playerIndex]);
+    public int GetScore(int playerID)
+    {
+		if (playerID == 1) {
+        	return player1Properties.score;
 		}
-	
-	}
-
-	public void NewGame() {
-		for (int i = 0; i < scores.Length; i++) {
-			scores [i] = 0;
-			GUIController.Instance.SetLLText ("0");
-			GUIController.Instance.SetULText ("0");
+		else if (playerID == 2) {
+        	return player2Properties.score;
 		}
-	} 
-
-	public int GetScore (int playerID) {
-		return scores[playerID];
-	} 
+		return 0;
+    }
 }
 

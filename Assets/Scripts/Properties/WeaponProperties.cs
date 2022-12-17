@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponProperties {
+public class WeaponProperties : MonoBehaviour {
 	 
 
 	public float xSpeed;

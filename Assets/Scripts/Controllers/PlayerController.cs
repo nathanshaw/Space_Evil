@@ -13,30 +13,39 @@ public class Boundary
 
 public class PlayerController : MonoBehaviour
 {
+	// THESE ARE ALL CORRECT AND SHOULD STAY IN THIS CLASS
 	public Boundary boundary;
 	public float movementSpeed;
-	public float maxMovementSpeed;
+
+	// TODO - this code needs to be updated so all movement control is handled in this external class
+	public PlayerMovement movementController;
+
+	// TODO - this contains the player's actual stats
+	public PlayerProperties player;
+
+	// public Player
+
+	// Player Hit Points
+
+	public GameController gc;
+
+
+	// THIS SHOULD BE DETERMINED BY PLAYER_SHIP
 	public float vTilt;
 	public float hTilt;
+	// this should be determined by the primary_gun attachment
 	public GameObject[] bolts;
 	public GameObject topSideBolt;
 	public GameObject bottomSideBolt;
 	public GameObject playerDeathExplosion;
-	public GameController gc;
 	public Transform bottomSideSpawn;
 	public Transform topSideSpawn;
-
 	public Transform[] boltSpawns;
 
 	// Player Attributes 
-	public int playerID;// index 0
 	public float shotsPerSecond;
 	private float timeBetweenBolts;
 	private float manualTimeBetweenBolts;
-	public float maxHitPoints;
-	public float currentHitPoints;
-
-	private float healthPercent;
 
 	// bolt gun
 	public float boltDamage;
@@ -75,6 +84,7 @@ public class PlayerController : MonoBehaviour
 
 	void Start ()
 	{
+
 		// map the gampad to the player
 		for (var i = 0; i < Gamepad.all.Count; i++)
         {
@@ -82,8 +92,7 @@ public class PlayerController : MonoBehaviour
         };
 
 		ResetBoltDamage ();
-		playerPrefix = "P" + (playerID + 1) + " ";
-		Debug.Log ("player prefix : " + playerPrefix);
+		playerPrefix = "P" + (player.playerID + 1) + " ";
 		verticalString = playerPrefix + "Vertical";
 		horizontalString = playerPrefix + "Horizontal";
 		fire1String = playerPrefix + "Fire1";
@@ -237,21 +246,22 @@ public class PlayerController : MonoBehaviour
 	}
 
 	private void SendGUIMessage (string message) {
-		if (playerID == 0) {
+		if (player.playerID == 0) {
 			GUIController.Instance.SetURText(message);
 		}
-		else if (playerID == 1){
+		else if (player.playerID == 1){
 			GUIController.Instance.SetLRText(message);
 			}
 	}
 
+
 	public int PlayerHit(float damage) {
-		currentHitPoints -= damage;
+		player.currentHitPoints -= damage;
 		UpdateHealthBar ();
 		// Debug.Log ("Player Took Damage, Current Hit Points : " + playerHitPoints);
-		if (currentHitPoints <= 0) {
-			currentHitPoints = 0;
-			gc.PlayerKilled (playerID);
+		if (player.currentHitPoints <= 0) {
+			player.currentHitPoints = 0;
+			gc.PlayerKilled (player.playerID);
 			Destroy (gameObject);
 			Instantiate (playerDeathExplosion, 
 				transform.position, 
@@ -264,8 +274,8 @@ public class PlayerController : MonoBehaviour
 	public float SpeedChange (float speedChange) {
 		Debug.Log ("speed : " + movementSpeed); 
 		movementSpeed += speedChange;
-		if (movementSpeed > maxMovementSpeed) {
-			movementSpeed = maxMovementSpeed;
+		if (movementSpeed > player.maxMovementSpeed) {
+			movementSpeed = player.maxMovementSpeed;
 		}
 		Debug.Log ("speed : " + movementSpeed);
 		SendGUIMessage("Speed : " + movementSpeed);
@@ -310,24 +320,24 @@ public class PlayerController : MonoBehaviour
 	}
 
 	public float HealthChange (float healthChange) {
-		currentHitPoints += healthChange;
-		if (currentHitPoints > maxHitPoints) {
-			currentHitPoints = maxHitPoints;
+		player.currentHitPoints += healthChange;
+		if (player.currentHitPoints > player.maxHitPoints) {
+			player.currentHitPoints = player.maxHitPoints;
 		}
 		UpdateHealthBar ();
-		SendGUIMessage("HP : " + currentHitPoints);
-		return currentHitPoints;
+		SendGUIMessage("HP : " + player.currentHitPoints);
+		return player.currentHitPoints;
 	}
 
 	public float MaxHealthChange (float maxHealthChange) {
-		maxHitPoints += maxHealthChange;
-		currentHitPoints += maxHealthChange;
-		if (maxHitPoints < 50) {
-			maxHitPoints = 50;
+		player.maxHitPoints += maxHealthChange;
+		player.currentHitPoints += maxHealthChange;
+		if (player.maxHitPoints < 50) {
+			player.maxHitPoints = 50;
 		}
 		UpdateHealthBar ();
-		SendGUIMessage("Max HP : " + maxHitPoints);
-		return currentHitPoints;
+		SendGUIMessage("Max HP : " + player.maxHitPoints);
+		return player.maxHitPoints;
 	}
 
 	public float FireRateChange (float fireRateChange) {
@@ -343,16 +353,16 @@ public class PlayerController : MonoBehaviour
 	}
 
 	public void UpdateHealthBar() {
-		float normalizedScale = currentHitPoints / maxHitPoints;
-		if (playerID == 0) {
+		float normalizedScale = player.currentHitPoints / player.maxHitPoints;
+		if (player.playerID == 0) {
 			GUIController.Instance.UpdateUpperHealthBar (normalizedScale);
 			return;
 		}
-		healthPercent = normalizedScale * 100;
+		player.healthPercent = normalizedScale * 100;
 		GUIController.Instance.UpdateLowerHealthBar (normalizedScale);
 		}
 
 	public float GetHealthPercent () {
-		return healthPercent;
+		return player.healthPercent;
 	}
 }
